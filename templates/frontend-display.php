@@ -108,9 +108,6 @@ $description = !empty($atts['description']) ? $atts['description'] : ($settings[
             <button class="button share-facebook">
                 <i class="fab fa-facebook"></i> <?php echo esc_html__('Facebook', 'three-card-tarot'); ?>
             </button>
-            <button class="button share-twitter">
-                <i class="fab fa-twitter"></i> <?php echo esc_html__('Twitter', 'three-card-tarot'); ?>
-            </button>
             <button class="button share-email">
                 <i class="fas fa-envelope"></i> <?php echo esc_html__('Email', 'three-card-tarot'); ?>
             </button>

@@ -21,7 +21,7 @@ A comprehensive WordPress plugin for interactive three card tarot readings with 
 ### 🌐 Frontend Features
 - **Shortcode Support**: Easy integration with `[ac_three_tarot_card_reading]`
 - **AJAX Loading**: Smooth, non-refresh interactions
-- **Social Sharing**: Share readings on Facebook, Twitter, and email
+- **Social Sharing**: Share readings on Facebook and email
 - **Accessibility**: Full keyboard navigation and screen reader support
 - **Mobile Optimized**: Touch-friendly interface for mobile devices
 
