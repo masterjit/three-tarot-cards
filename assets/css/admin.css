@@ -1,0 +1,543 @@
+/**
+ * Admin CSS for Three Card Tarot Plugin
+ */
+
+.tarot-admin-header {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
+.tarot-admin-header .button {
+    margin-right: 10px;
+}
+
+.tarot-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tarot-card-item {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.tarot-card-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-image {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.card-image img {
+    max-width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.no-image {
+    width: 100%;
+    height: 150px;
+    background: #f5f5f5;
+    border: 2px dashed #ddd;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-style: italic;
+}
+
+.card-details h3 {
+    margin: 0 0 10px 0;
+    color: #23282d;
+    font-size: 18px;
+}
+
+.card-position {
+    margin: 5px 0;
+    color: #666;
+    font-size: 12px;
+}
+
+.card-status {
+    margin: 5px 0;
+}
+
+.status-active {
+    background: #46b450;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.status-inactive {
+    background: #dc3232;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.card-content-preview {
+    margin: 10px 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+    max-height: 60px;
+    overflow: hidden;
+}
+
+.card-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.card-actions .button {
+    flex: 1;
+}
+
+.no-cards {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fff;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.no-cards p {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 16px;
+}
+
+/* Form Container Styles */
+.tarot-form-container {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    padding: 25px;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tarot-form-container .form-table th {
+    width: 150px;
+    padding: 15px 10px 15px 0;
+    vertical-align: top;
+}
+
+.tarot-form-container .form-table td {
+    padding: 15px 10px;
+}
+
+.tarot-form-container .form-table input[type="text"],
+.tarot-form-container .form-table input[type="number"],
+.tarot-form-container .form-table textarea {
+    width: 100%;
+    max-width: 500px;
+}
+
+.tarot-form-container .form-table textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Card Preview Section */
+.card-preview-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 25px;
+    margin-top: 30px;
+}
+
+.card-preview-section h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #23282d;
+}
+
+.card-preview {
+    display: flex;
+    justify-content: center;
+}
+
+.preview-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    width: 100%;
+}
+
+.preview-image {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.preview-image img {
+    max-width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+}
+
+.preview-details h4 {
+    margin: 0 0 10px 0;
+    color: #23282d;
+    font-size: 18px;
+}
+
+.preview-details p {
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Settings Preview */
+.settings-preview {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 25px;
+    margin-top: 30px;
+}
+
+.settings-preview h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #23282d;
+}
+
+.preview-container {
+    display: flex;
+    justify-content: center;
+}
+
+.preview-reading {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    width: 100%;
+}
+
+.preview-reading h4 {
+    margin: 0 0 10px 0;
+    color: #23282d;
+    font-size: 24px;
+    text-align: center;
+}
+
+.preview-reading p {
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.preview-cards {
+    margin: 20px 0;
+}
+
+.preview-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.preview-card-item {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.preview-card-back {
+    width: 80%;
+    height: 80%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.preview-info {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+/* Modal Styles */
+.tarot-modal {
+    position: fixed;
+    z-index: 100000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #23282d;
+}
+
+.form-table th {
+    width: 120px;
+    padding: 15px 10px 15px 0;
+    vertical-align: top;
+}
+
+.form-table td {
+    padding: 15px 10px;
+}
+
+.form-table input[type="text"],
+.form-table input[type="number"],
+.form-table textarea {
+    width: 100%;
+    max-width: 400px;
+}
+
+.form-table textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.upload-image {
+    margin-left: 10px;
+}
+
+#edit-image-preview {
+    margin-top: 10px;
+}
+
+#edit-image-preview img {
+    max-width: 200px;
+    max-height: 150px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.submit {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.submit .button {
+    margin-right: 10px;
+}
+
+/* Statistics Table */
+.widefat {
+    margin: 20px 0;
+}
+
+.widefat td {
+    padding: 12px;
+}
+
+.widefat td:first-child {
+    font-weight: bold;
+    width: 200px;
+}
+
+/* Code Blocks */
+code {
+    background: #f1f1f1;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+/* API Documentation */
+.api-docs {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.api-docs h3 {
+    margin-top: 0;
+    color: #23282d;
+}
+
+.api-docs ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.api-docs li {
+    margin-bottom: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tarot-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    .form-table th,
+    .form-table td {
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+    }
+    
+    .form-table th {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+    
+    .preview-card-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .card-actions {
+        flex-direction: column;
+    }
+    
+    .card-actions .button {
+        margin-bottom: 5px;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0073aa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Success/Error Messages */
+.tarot-notice {
+    padding: 10px 15px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border-left: 4px solid;
+}
+
+.tarot-notice.success {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.tarot-notice.error {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+/* Form Validation */
+.form-table input.error,
+.form-table textarea.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 1px #dc3545;
+}
+
+.form-table input.error:focus,
+.form-table textarea.error:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 1px #dc3545;
+}
+
+/* Image Upload Preview */
+#image-preview,
+#card-back-preview {
+    margin-top: 10px;
+}
+
+#image-preview img,
+#card-back-preview img {
+    max-width: 200px;
+    max-height: 150px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} 
