@@ -31,7 +31,7 @@ class Tarot_Admin {
             'manage_options',
             'tarot-cards',
             array($this, 'admin_page'),
-            'dashicons-admin-appearance',
+            'dashicons-editor-ul',
             30
         );
         

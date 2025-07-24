@@ -154,29 +154,6 @@ $settings = wp_parse_args($settings, $default_settings);
             <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php echo esc_attr__('Save Settings', 'three-card-tarot'); ?>">
         </p>
     </form>
-    
-    <!-- Settings Preview -->
-    <div class="settings-preview">
-        <h3><?php echo esc_html__('Settings Preview', 'three-card-tarot'); ?></h3>
-        <div class="preview-container">
-            <div class="preview-reading">
-                <h4 id="preview-title"><?php echo esc_html($settings['reading_title']); ?></h4>
-                <p id="preview-desc"><?php echo esc_html($settings['reading_description']); ?></p>
-                <div class="preview-cards">
-                    <div class="preview-card-grid">
-                        <?php for ($i = 0; $i < min($settings['total_cards_display'], 6); $i++) : ?>
-                            <div class="preview-card-item">
-                                <div class="preview-card-back"></div>
-                            </div>
-                        <?php endfor; ?>
-                    </div>
-                </div>
-                <p class="preview-info">
-                    <?php echo esc_html(sprintf(__('Cards per reading: %d | Total cards display: %d', 'three-card-tarot'), $settings['cards_per_reading'], $settings['total_cards_display'])); ?>
-                </p>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
