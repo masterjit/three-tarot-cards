@@ -27,11 +27,11 @@ class Tarot_Admin {
     public function add_admin_menu() {
         add_menu_page(
             __('Three Card Tarot', 'three-card-tarot'),
-            __('Tarot Cards', 'three-card-tarot'),
+            __('Three Tarot Cards', 'three-card-tarot'),
             'manage_options',
             'tarot-cards',
             array($this, 'admin_page'),
-            'dashicons-cards',
+            'dashicons-admin-appearance',
             30
         );
         

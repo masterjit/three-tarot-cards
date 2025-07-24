@@ -49,7 +49,7 @@ A comprehensive WordPress plugin for interactive three card tarot readings with 
    - Default cards will be inserted automatically
 
 4. **Configure Settings**
-   - Go to WordPress Admin → Tarot Cards → Settings
+   - Go to WordPress Admin → Three Tarot Cards → Settings
    - Customize reading parameters and appearance
 
 ## Usage
@@ -57,7 +57,7 @@ A comprehensive WordPress plugin for interactive three card tarot readings with 
 ### For Administrators
 
 #### Managing Cards
-1. Go to **WordPress Admin → Tarot Cards**
+1. Go to **WordPress Admin → Three Tarot Cards**
 2. Click **"Add New Card"** to create a new card
 3. Fill in:
    - **Card Name**: The name of the tarot card
@@ -67,7 +67,7 @@ A comprehensive WordPress plugin for interactive three card tarot readings with 
    - **Status**: Active/Inactive
 
 #### Settings Configuration
-1. Go to **WordPress Admin → Tarot Cards → Settings**
+1. Go to **WordPress Admin → Three Tarot Cards → Settings**
 2. Configure:
    - **Cards per Reading**: Number of cards to select (default: 3)
    - **Total Cards Display**: Number of cards to show (default: 8)
