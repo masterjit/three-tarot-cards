@@ -27,8 +27,7 @@ $description = !empty($atts['description']) ? $atts['description'] : ($settings[
                     <div class="tarot-card" data-card-id="<?php echo esc_attr($card->id); ?>" data-card-index="<?php echo esc_attr($index); ?>">
                         <div class="card-inner">
                             <div class="card-front">
-                                <img src="<?php echo esc_url($card->card_image); ?>" alt="<?php echo esc_attr($card->card_name); ?>">
-                                <div class="card-name"><?php echo esc_html($card->card_name); ?></div>
+                                <img src="<?php echo esc_url($card->card_image); ?>" alt="<?php echo esc_attr($card->card_name); ?>">                                
                             </div>
                             <div class="card-back">
                                 <img src="<?php echo esc_url($this->get_card_back_image()); ?>" alt="<?php echo esc_attr__('Card Back', 'three-card-tarot'); ?>">
