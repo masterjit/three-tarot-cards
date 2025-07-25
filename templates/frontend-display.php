@@ -72,9 +72,6 @@ $description = !empty($atts['description']) ? $atts['description'] : ($settings[
                 <button class="button button-primary" id="draw-again-btn">
                     <?php echo esc_html__('Draw Again', 'three-card-tarot'); ?>
                 </button>
-                <button class="button" id="share-reading-btn">
-                    <?php echo esc_html__('Share Reading', 'three-card-tarot'); ?>
-                </button>
             </div>
         </div>
         

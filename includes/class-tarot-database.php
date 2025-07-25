@@ -20,7 +20,7 @@ class Tarot_Database {
      */
     public function __construct() {
         global $wpdb;
-        $this->table_name = $wpdb->prefix . 'tarot_cards';
+        $this->table_name = $wpdb->prefix . 'ac_three_tarot_cards';
     }
     
     /**

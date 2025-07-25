@@ -1,151 +1,62 @@
-# Three Card Tarot WordPress Plugin
+# Three Card Tarot - WordPress Plugin
 
-A comprehensive WordPress plugin for interactive three card tarot readings with customizable cards and beautiful user interface.
+A complete WordPress plugin for interactive tarot card readings with a beautiful, responsive interface.
 
-## Features
+## 🎴 Features
 
-### 🎴 Core Functionality
-- **Interactive Card Selection**: Users can select 3 cards from a display of 8 cards
-- **Beautiful Card Animations**: Smooth card flip animations and hover effects
-- **Reading Generation**: Automatic interpretation generation based on selected cards
-- **Draw Again**: Reset functionality to start a new reading
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+- **Interactive Card Selection**: Users can select 3 cards from 8 displayed cards
+- **Beautiful Animations**: Smooth card flip and shuffle animations
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Admin Interface**: Easy card management with add, edit, and delete functionality
+- **Customizable Settings**: Configure reading parameters and card back images
+- **AJAX-powered**: Fast, dynamic interactions without page reloads
+- **Shortcode Support**: Use `[ac_three_tarot_card_reading]` anywhere
 
-### 🛠️ Admin Management
-- **Card Management**: Add, edit, delete, and organize tarot cards
-- **Image Upload**: WordPress media library integration for card images
-- **Content Management**: Rich text editor for card interpretations
-- **Settings Panel**: Customize reading parameters and appearance
-- **Bulk Operations**: Import/export card data
+## 📋 Requirements
 
-### 🌐 Frontend Features
-- **Shortcode Support**: Easy integration with `[ac_three_tarot_card_reading]`
-- **AJAX Loading**: Smooth, non-refresh interactions
-- **Social Sharing**: Share readings on Facebook and email
-- **Accessibility**: Full keyboard navigation and screen reader support
-- **Mobile Optimized**: Touch-friendly interface for mobile devices
+- WordPress 5.0+
+- PHP 7.4+
+- MySQL 5.7+
+- jQuery (included with WordPress)
 
-## Installation
+## 🚀 Installation
 
-### Prerequisites
-- WordPress 5.0 or higher
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
+### Method 1: Automatic Installation
+1. Upload the plugin folder to `/wp-content/plugins/`
+2. Activate the plugin in WordPress Admin → Plugins
+3. The database tables and default cards will be created automatically
 
-### Installation Steps
+### Method 2: Manual Database Setup
+1. Upload the plugin folder to `/wp-content/plugins/`
+2. Run the SQL script in `database-setup.sql` in your database
+3. Activate the plugin in WordPress Admin → Plugins
 
-1. **Upload Plugin Files**
-   ```bash
-   # Copy plugin files to your WordPress plugins directory
-   cp -r tarot-three-card /wp-content/plugins/
-   ```
+## 📖 Usage
 
-2. **Activate Plugin**
-   - Go to WordPress Admin → Plugins
-   - Find "Three Card Tarot" and click "Activate"
-
-3. **Database Setup**
-   - The plugin will automatically create the required database table
-   - Default cards will be inserted automatically
-
-4. **Configure Settings**
-   - Go to WordPress Admin → Three Tarot Cards → Settings
-   - Customize reading parameters and appearance
-
-## Usage
-
-### For Administrators
-
-#### Managing Cards
-1. Go to **WordPress Admin → Three Tarot Cards**
-2. Click **"Add New Card"** to create a new card
-3. Fill in:
-   - **Card Name**: The name of the tarot card
-   - **Card Image**: Upload or select an image for the card
-   - **Card Content**: The interpretation/meaning of the card
-   - **Position**: Order in which cards appear
-   - **Status**: Active/Inactive
-
-#### Settings Configuration
-1. Go to **WordPress Admin → Three Tarot Cards → Settings**
-2. Configure:
-   - **Cards per Reading**: Number of cards to select (default: 3)
-   - **Total Cards Display**: Number of cards to show (default: 8)
-   - **Enable Animations**: Toggle card animations
-   - **Reading Title**: Custom title for the reading interface
-   - **Reading Description**: Custom description text
-
-### For Users
-
-#### Using the Shortcode
-Add the tarot reading interface to any page or post:
-
+### Shortcode
+Add this shortcode to any page or post:
 ```
 [ac_three_tarot_card_reading]
 ```
 
-Or with custom parameters:
-
+### Custom Parameters
 ```
 [ac_three_tarot_card_reading title="My Custom Reading" description="Select your cards wisely"]
 ```
 
-#### Reading Process
-1. **Select Cards**: Click on 3 cards from the displayed grid
-2. **Review Selection**: Confirm your selected cards
-3. **Get Reading**: Click "Get My Reading" to see your interpretation
-4. **Share or Draw Again**: Share your reading or start a new one
+### Admin Interface
+- **WordPress Admin → Three Tarot Cards**: Manage all cards
+- **Add New Card**: Upload images and add card interpretations
+- **Settings**: Configure reading parameters and card back images
 
-## Database Structure
+## 🎯 User Experience
 
-### Main Table: `wp_tarot_cards`
+1. **Card Selection**: Users see 8 cards face down
+2. **Interactive Selection**: Click to select exactly 3 cards
+3. **Reading Generation**: Get personalized interpretation via AJAX
+4. **Draw Again**: Shuffle and get new random cards
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | mediumint(9) | Primary key, auto-increment |
-| `card_name` | varchar(255) | Name of the tarot card |
-| `card_image` | varchar(500) | URL to card image |
-| `card_content` | longtext | Card interpretation/meaning |
-| `card_position` | int(11) | Display order position |
-| `is_active` | tinyint(1) | Active status (1/0) |
-| `created_at` | datetime | Creation timestamp |
-| `updated_at` | datetime | Last update timestamp |
-
-## API Endpoints
-
-### REST API
-
-#### Get All Cards
-```
-GET /wp-json/tarot/v1/cards
-```
-
-#### Create Reading
-```
-POST /wp-json/tarot/v1/reading
-{
-  "card_ids": [1, 2, 3]
-}
-```
-
-#### Get Reading
-```
-GET /wp-json/tarot/v1/reading/{id}
-```
-
-### AJAX Endpoints
-
-#### Get Reading (Frontend)
-```
-POST /wp-admin/admin-ajax.php
-{
-  "action": "tarot_get_reading",
-  "card_ids": [1, 2, 3],
-  "nonce": "nonce_value"
-}
-```
-
-## File Structure
+## 🛠️ File Structure
 
 ```
 tarot-three-card/
@@ -155,160 +66,155 @@ tarot-three-card/
 │   ├── class-tarot-admin.php     # Admin interface
 │   ├── class-tarot-frontend.php  # Frontend display
 │   └── class-tarot-api.php       # REST API endpoints
+├── templates/
+│   ├── admin-page.php            # Admin dashboard
+│   ├── add-card-page.php         # Add card form
+│   ├── settings-page.php         # Settings page
+│   └── frontend-display.php      # Public interface
 ├── assets/
 │   ├── css/
-│   │   ├── admin.css             # Admin styles
-│   │   └── frontend.css          # Frontend styles
+│   │   ├── admin.css            # Admin styles
+│   │   └── frontend.css         # Frontend styles
 │   ├── js/
-│   │   ├── admin.js              # Admin JavaScript
-│   │   └── frontend.js           # Frontend JavaScript
+│   │   ├── admin.js             # Admin JavaScript
+│   │   └── frontend.js          # Frontend JavaScript
 │   └── images/
-│       └── cards/                # Default card images
-├── templates/
-│   ├── admin-page.php            # Admin page template
-│   └── frontend-display.php      # Frontend display template
-└── languages/                    # Translation files
+│       ├── card-back.svg        # Default card back
+│       └── cards/
+│           └── placeholder.svg   # Default card image
+├── README.md                     # This file
+├── INSTALLATION.md               # Installation guide
+└── database-setup.sql            # Database setup script
 ```
 
-## Customization
+## ⚙️ Configuration
+
+### Settings
+- **Cards per reading**: Number of cards to select (default: 3)
+- **Total cards display**: Number of cards to show (default: 8)
+- **Enable animations**: Toggle card animations
+- **Card back image**: Custom card back image URL
+
+### Database
+- **Table**: `wp_tarot_cards`
+- **Default cards**: 8 tarot cards included
+- **Fields**: id, card_name, card_image, card_content, card_position, is_active
+
+## 🔧 Customization
 
 ### Styling
-The plugin uses CSS custom properties for easy theming:
-
+Modify `assets/css/frontend.css` for custom styling:
 ```css
-:root {
-  --tarot-primary-color: #667eea;
-  --tarot-secondary-color: #764ba2;
-  --tarot-card-border-radius: 15px;
-  --tarot-animation-duration: 0.6s;
+.tarot-reading-container {
+    /* Your custom styles */
 }
 ```
 
-### Hooks and Filters
-
-#### Actions
-- `tarot_before_card_selection`: Fired before card selection
-- `tarot_after_card_selection`: Fired after card selection
-- `tarot_before_reading_display`: Fired before reading display
-- `tarot_after_reading_display`: Fired after reading display
-
-#### Filters
-- `tarot_card_content`: Modify card interpretation content
-- `tarot_reading_title`: Modify reading title
-- `tarot_card_image_url`: Modify card image URL
-- `tarot_selected_cards`: Modify selected cards array
-
-### Example Customization
-
-```php
-// Add custom styling
-add_action('wp_head', function() {
-    echo '<style>
-        .tarot-card {
-            border: 3px solid #gold;
-        }
-    </style>';
+### JavaScript
+Extend functionality in `assets/js/frontend.js`:
+```javascript
+// Add custom event handlers
+$('.tarot-card').on('custom-event', function() {
+    // Your custom code
 });
-
-// Modify card content
-add_filter('tarot_card_content', function($content, $card) {
-    return $content . '<p>Custom interpretation for ' . $card->card_name . '</p>';
-}, 10, 2);
 ```
 
-## Troubleshooting
+### Templates
+Override templates by copying to your theme:
+```
+your-theme/tarot-three-card/templates/frontend-display.php
+```
+
+## 🌐 API Endpoints
+
+### REST API
+- `GET /wp-json/tarot/v1/cards` - Get all cards
+- `POST /wp-json/tarot/v1/reading` - Generate reading
+
+### AJAX Actions
+- `tarot_get_reading` - Get reading for selected cards
+- `tarot_get_random_cards` - Get random cards for display
+- `tarot_save_card` - Save card (admin)
+- `tarot_delete_card` - Delete card (admin)
+
+## 🎨 Features in Detail
+
+### Card Management
+- Add unlimited cards with custom images
+- Edit card names, images, and interpretations
+- Enable/disable cards
+- Drag and drop image upload
+
+### User Interface
+- Responsive grid layout
+- Smooth card flip animations
+- Progress indicator for card selection
+- Loading states and error handling
+- Mobile-friendly touch interactions
+
+### Reading System
+- Real-time card selection
+- AJAX-powered reading generation
+- Timestamped readings
+- Social media sharing
+- "Draw again" functionality
+
+## 🔒 Security
+
+- **Nonce Verification**: All AJAX requests verified
+- **Input Sanitization**: All user inputs sanitized
+- **SQL Prepared Statements**: Database queries secured
+- **Capability Checks**: Admin functions protected
+
+## 🚀 Performance
+
+- **Minimal Database Queries**: Optimized for speed
+- **Cached Assets**: CSS and JS files cached
+- **Lazy Loading**: Images load on demand
+- **Responsive Images**: Optimized for all devices
+
+## 📱 Mobile Support
+
+- **Touch Interactions**: Optimized for mobile devices
+- **Responsive Design**: Works on all screen sizes
+- **Touch-friendly Buttons**: Large, accessible buttons
+- **Smooth Animations**: Hardware-accelerated animations
+
+## 🎴 Default Cards
+
+The plugin includes 8 default tarot cards:
+1. The Fool
+2. The Magician
+3. The High Priestess
+4. The Empress
+5. The Emperor
+6. The Hierophant
+7. The Lovers
+8. The Chariot
+
+## 🔧 Troubleshooting
 
 ### Common Issues
-
-#### Cards Not Loading
-- Check if database table exists: `wp_tarot_cards`
-- Verify plugin activation created default cards
-- Check for JavaScript errors in browser console
-
-#### Images Not Displaying
-- Ensure image URLs are accessible
-- Check file permissions on uploaded images
-- Verify media library integration is working
-
-#### AJAX Errors
-- Check nonce verification
-- Verify user permissions
-- Check server error logs
+1. **Cards not displaying**: Check if plugin is activated
+2. **Images not loading**: Verify image URLs in admin
+3. **AJAX errors**: Check browser console for errors
+4. **Database issues**: Run database setup script
 
 ### Debug Mode
-Enable WordPress debug mode to see detailed error messages:
-
+Enable WordPress debug mode in `wp-config.php`:
 ```php
-// In wp-config.php
 define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', true);
 ```
 
-## Performance Optimization
+## 📄 License
 
-### Caching
-- Enable WordPress object caching
-- Use CDN for card images
-- Implement browser caching for static assets
+This plugin is provided as-is for educational and commercial use.
 
-### Database Optimization
-- Add indexes to frequently queried columns
-- Regular database cleanup
-- Optimize card image sizes
+## 🤝 Support
 
-## Security
+For support and feature requests, please refer to the WordPress plugin repository or contact the developer.
 
-### Data Sanitization
-- All user inputs are sanitized
-- SQL queries use prepared statements
-- Nonce verification on all forms
+---
 
-### File Upload Security
-- Image type validation
-- File size limits
-- Secure file storage
-
-## Browser Support
-
-- **Chrome**: 60+
-- **Firefox**: 55+
-- **Safari**: 12+
-- **Edge**: 79+
-- **Mobile Browsers**: iOS Safari 12+, Chrome Mobile 60+
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-This plugin is licensed under the GPL v2 or later.
-
-## Support
-
-For support and questions:
-- Create an issue on GitHub
-- Check the documentation
-- Review the troubleshooting section
-
-## Changelog
-
-### Version 1.0.0
-- Initial release
-- Basic card management
-- Frontend reading interface
-- Admin management panel
-- REST API endpoints
-- Responsive design
-- Social sharing features
-
-## Credits
-
-- Built with WordPress best practices
-- Uses modern CSS Grid and Flexbox
-- Implements accessibility standards
-- Follows WordPress coding standards 
+**Three Card Tarot Plugin** - Transform your WordPress site with interactive tarot readings! 🎴✨ 
