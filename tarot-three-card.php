@@ -1,11 +1,9 @@
 <?php
 /**
- * Plugin Name: Three Card Tarot
- * Plugin URI: https://example.com/three-card-tarot
+ * Plugin Name: Three Card Tarot 
  * Description: A WordPress plugin for interactive three card tarot readings with customizable cards.
  * Version: 1.0.0
- * Author: AstrologyCosmic
- * Author URI: https://example.com
+ * Author: Astrology Cosmic
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: three-card-tarot
