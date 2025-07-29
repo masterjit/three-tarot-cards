@@ -52,10 +52,6 @@ class Tarot_Frontend {
             'description' => ''
         ), $atts);
         
-        $settings = get_option('tarot_settings', array());
-        $database = new Tarot_Database();
-        $cards = $database->get_random_cards($settings['total_cards_display'] ?? 8);
-        
         ob_start();
         include TAROT_PLUGIN_PATH . 'templates/frontend-display.php';
         return ob_get_clean();

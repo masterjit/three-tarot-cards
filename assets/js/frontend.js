@@ -30,6 +30,13 @@ jQuery(document).ready(function($) {
         updateProgress();
     }
     
+    // Load initial cards on page load
+    function loadInitialCards() {
+        fetchNewRandomCards(function() {
+            initGame();
+        });
+    }
+    
     // Initialize card events
     bindCardEvents();
     
@@ -203,15 +210,14 @@ jQuery(document).ready(function($) {
     
     // Function to update cards display with new cards
     function updateCardsDisplay(cards) {
-        var cardsGrid = $('.cards-grid');
+        var cardsGrid = $('#cards-grid');
         cardsGrid.empty();
         
         cards.forEach(function(card, index) {
-            var cardHtml = '<div class="tarot-card" data-card-id="' + card.id + '">' +
+            var cardHtml = '<div class="tarot-card" data-card-id="' + card.id + '" data-card-index="' + index + '">' +
                 '<div class="card-inner">' +
                 '<div class="card-front">' +
                 '<img src="' + card.image + '" alt="' + card.name + '">' +
-                '<h3 class="card-name">' + card.name + '</h3>' +
                 '</div>' +
                 '<div class="card-back">' +
                 '<img src="' + tarot_frontend.card_back_image + '" alt="Card Back">' +
@@ -464,8 +470,8 @@ jQuery(document).ready(function($) {
         }, 500);
     }
     
-    // Initialize game on page load
-    initGame();
+    // Load initial cards and initialize game on page load
+    loadInitialCards();
     
     // Add shuffle button functionality (if needed)
     $('.shuffle-cards').on('click', function() {
