@@ -114,7 +114,7 @@ class Tarot_Frontend {
                 'id' => $card->id,
                 'name' => $card->card_name,
                 'image' => $card->card_image,
-                'content' => $card->card_content
+                'content' => stripslashes(wp_kses_post($card->card_content))
             );
         }
         
@@ -135,11 +135,11 @@ class Tarot_Frontend {
                 __('Your Three Card Reading', 'three-card-tarot'),
                 __('Here is your personalized tarot reading based on the cards you selected:', 'three-card-tarot'),
                 sprintf(__('Card 1: %s', 'three-card-tarot'), $cards[0]->card_name),
-                $cards[0]->card_content,
+                stripslashes(wp_kses_post($cards[0]->card_content)),
                 sprintf(__('Card 2: %s', 'three-card-tarot'), $cards[1]->card_name),
-                $cards[1]->card_content,
+                stripslashes(wp_kses_post($cards[1]->card_content)),
                 sprintf(__('Card 3: %s', 'three-card-tarot'), $cards[2]->card_name),
-                $cards[2]->card_content
+                stripslashes(wp_kses_post($cards[2]->card_content))
             );
         }
         

@@ -193,6 +193,7 @@
 .selected-cards p{
     text-align: center;
     color: #000000 !important;
+    font-size: 1.1rem;
 }
 
 .selected-cards h3 {
