@@ -7,6 +7,15 @@ jQuery(document).ready(function($) {
     // Initialize media uploader
     var mediaUploader;
     
+    // Show reversed content fields (they're optional and useful even when global setting is disabled)
+    function showReversedContentFields() {
+        $('#reversed-content-row').show();
+        $('#edit-reversed-content-row').show();
+    }
+    
+    // Initialize reversed content field visibility
+    showReversedContentFields();
+    
     // Handle image upload button clicks
     $('.upload-image').on('click', function(e) {
         e.preventDefault();
@@ -71,6 +80,7 @@ jQuery(document).ready(function($) {
                     $('#edit-card-name').val(card.card_name);
                     $('#edit-card-image').val(card.card_image);
                     $('#edit-card-content').val(card.card_content);
+                    $('#edit-card-content-reversed').val(card.card_content_reversed || '');
                     $('#edit-card-position').val(card.card_position);
                     $('#edit-is-active').prop('checked', card.is_active == 1);
                     

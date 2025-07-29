@@ -49,11 +49,21 @@ if (!defined('ABSPATH')) {
                 
                 <tr>
                     <th scope="row">
-                        <label for="card_content"><?php echo esc_html__('Card Interpretation', 'three-card-tarot'); ?> *</label>
+                        <label for="card_content"><?php echo esc_html__('Card Interpretation (Upright)', 'three-card-tarot'); ?> *</label>
                     </th>
                     <td>
                         <textarea id="card_content" name="card_content" rows="8" class="large-text" required><?php echo esc_textarea($card['card_content']); ?></textarea>
-                        <p class="description"><?php echo esc_html__('Enter the interpretation and meaning of this tarot card', 'three-card-tarot'); ?></p>
+                        <p class="description"><?php echo esc_html__('Enter the interpretation and meaning of this tarot card when upright', 'three-card-tarot'); ?></p>
+                    </td>
+                </tr>
+                
+                <tr id="reversed-content-row">
+                    <th scope="row">
+                        <label for="card_content_reversed"><?php echo esc_html__('Card Interpretation (Reversed)', 'three-card-tarot'); ?></label>
+                    </th>
+                    <td>
+                        <textarea id="card_content_reversed" name="card_content_reversed" rows="8" class="large-text"><?php echo esc_textarea($card['card_content_reversed']); ?></textarea>
+                        <p class="description"><?php echo esc_html__('Enter the interpretation and meaning of this tarot card when reversed (optional). This will be used when the global "Enable Reversed Cards" setting is turned on.', 'three-card-tarot'); ?></p>
                     </td>
                 </tr>
                 

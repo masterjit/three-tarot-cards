@@ -49,6 +49,37 @@
     transform: translateY(-5px);
 }
 
+/* Disabled state for cards when 3 are selected */
+.tarot-card[style*="pointer-events: none"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.tarot-card[style*="pointer-events: none"]:hover {
+    transform: none;
+}
+
+/* Reversed Card Styles */
+.tarot-card.card-reversed .card-front {
+    transform: rotateY(180deg); /* Front image is rotated 180° */
+}
+
+.tarot-card.card-reversed .card-back {
+    transform: rotateY(0deg);
+}
+
+/* Ensure all cards (both upright and reversed) start with back cover showing */
+.tarot-card.card-reversed .card-inner {
+    transform: rotateY(180deg) !important; /* Default state shows back cover */
+}
+
+/* Force all cards to show back cover by default */
+.tarot-card .card-inner {
+    transform: rotateY(180deg) !important; /* All cards show back cover by default */
+}
+
+
+
 /* Shuffle Animation */
 .tarot-card.shuffling {
     pointer-events: none;
@@ -63,6 +94,8 @@
     outline: 2px solid #667eea;
     outline-offset: 2px;
 }
+
+
 
 @keyframes shuffle {
     0% {
@@ -96,10 +129,17 @@
     text-align: center;
     transition: transform 0.6s;
     transform-style: preserve-3d;
+    transform: rotateY(180deg); /* Default state shows back cover */
 }
 
+/* When card is selected, flip to show front */
 .tarot-card.selected .card-inner {
-    transform: rotateY(180deg);
+    transform: rotateY(0deg); /* Show front when selected */
+}
+
+/* For reversed cards, when selected, show the rotated front */
+.tarot-card.card-reversed.selected .card-inner {
+    transform: rotateY(0deg); /* Show rotated front when selected */
 }
 
 .card-front,
@@ -308,7 +348,7 @@
 }
 
 .reading-interpretation p {
-    color: #6c757d;
+    color: #000000;
     margin-bottom: 15px;
 }
 

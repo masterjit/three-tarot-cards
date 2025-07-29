@@ -101,10 +101,20 @@ if (!defined('ABSPATH')) {
                 
                 <tr>
                     <th scope="row">
-                        <label for="edit-card-content"><?php echo esc_html__('Card Content', 'three-card-tarot'); ?></label>
+                        <label for="edit-card-content"><?php echo esc_html__('Card Content (Upright)', 'three-card-tarot'); ?></label>
                     </th>
                     <td>
                         <textarea id="edit-card-content" name="card_content" rows="5" class="large-text" required></textarea>
+                    </td>
+                </tr>
+                
+                <tr id="edit-reversed-content-row">
+                    <th scope="row">
+                        <label for="edit-card-content-reversed"><?php echo esc_html__('Card Content (Reversed)', 'three-card-tarot'); ?></label>
+                    </th>
+                    <td>
+                        <textarea id="edit-card-content-reversed" name="card_content_reversed" rows="5" class="large-text"></textarea>
+                        <p class="description"><?php echo esc_html__('Enter the interpretation when the card appears reversed (optional)', 'three-card-tarot'); ?></p>
                     </td>
                 </tr>
                 

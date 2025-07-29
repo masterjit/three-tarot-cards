@@ -14,6 +14,7 @@ $default_settings = array(
     'total_cards_display' => 8,
     'enable_animations' => true,
     'enable_sound' => false,
+    'enable_reversed_cards' => false,
     'card_back_image' => '',
     'reading_title' => __('Three Card Tarot Reading', 'three-card-tarot'),
     'reading_description' => __('Select three cards for your tarot reading.', 'three-card-tarot')
@@ -74,6 +75,19 @@ $settings = wp_parse_args($settings, $default_settings);
                         <input type="checkbox" id="enable_sound" name="enable_sound" value="1" <?php checked($settings['enable_sound'], true); ?>>
                         <?php echo esc_html__('Enable sound effects for card interactions (future feature)', 'three-card-tarot'); ?>
                     </label>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">
+                    <label for="enable_reversed_cards"><?php echo esc_html__('Enable Reversed Cards', 'three-card-tarot'); ?></label>
+                </th>
+                <td>
+                    <label>
+                        <input type="checkbox" id="enable_reversed_cards" name="enable_reversed_cards" value="1" <?php checked($settings['enable_reversed_cards'], true); ?>>
+                        <?php echo esc_html__('Enable cards to appear upright or reversed randomly', 'three-card-tarot'); ?>
+                    </label>
+                    <p class="description"><?php echo esc_html__('When enabled, cards will randomly appear upright or reversed, providing more nuanced readings with traditional tarot meanings.', 'three-card-tarot'); ?></p>
                 </td>
             </tr>
             

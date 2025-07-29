@@ -29,10 +29,13 @@ class Tarot_Frontend {
         wp_enqueue_style('tarot-frontend', TAROT_PLUGIN_URL . 'assets/css/frontend.css', array(), TAROT_PLUGIN_VERSION);
         wp_enqueue_script('tarot-frontend', TAROT_PLUGIN_URL . 'assets/js/frontend.js', array('jquery'), TAROT_PLUGIN_VERSION, true);
         
+        $settings = get_option('tarot_settings', array());
+        
         wp_localize_script('tarot-frontend', 'tarot_frontend', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('tarot_frontend_nonce'),
             'card_back_image' => $this->get_card_back_image(),
+            'settings' => $settings,
             'strings' => array(
                 'select_card' => __('Select a card', 'three-card-tarot'),
                 'card_selected' => __('Card selected', 'three-card-tarot'),
@@ -63,13 +66,17 @@ class Tarot_Frontend {
     public function ajax_get_reading() {
         check_ajax_referer('tarot_frontend_nonce', 'nonce');
         
-        $card_ids = array_map('intval', $_POST['card_ids']);
+        $card_data = $_POST['card_data'];
         
-        if (count($card_ids) !== 3) {
+        if (count($card_data) !== 3) {
             wp_send_json_error(array(
                 'message' => __('Please select exactly 3 cards.', 'three-card-tarot')
             ));
         }
+        
+        $card_ids = array_map(function($card) {
+            return intval($card['id']);
+        }, $card_data);
         
         $database = new Tarot_Database();
         $cards = $database->get_cards_by_ids($card_ids);
@@ -78,6 +85,11 @@ class Tarot_Frontend {
             wp_send_json_error(array(
                 'message' => __('Some cards could not be found.', 'three-card-tarot')
             ));
+        }
+        
+        // Add orientation data to cards
+        foreach ($cards as $index => $card) {
+            $card->orientation = $card_data[$index]['orientation'];
         }
         
         $reading = array(
@@ -131,16 +143,23 @@ class Tarot_Frontend {
         
         if (count($cards) === 3) {
             $interpretation = sprintf(
-                '<h3>%s</h3><p>%s</p><h4>%s</h4><p>%s</p><h4>%s</h4><p>%s</p><h4>%s</h4><p>%s</p>',
+                '<h3>%s</h3><p>%s</p>',
                 __('Your Three Card Reading', 'three-card-tarot'),
-                __('Here is your personalized tarot reading based on the cards you selected:', 'three-card-tarot'),
-                sprintf(__('Card 1: %s', 'three-card-tarot'), $cards[0]->card_name),
-                stripslashes(wp_kses_post($cards[0]->card_content)),
-                sprintf(__('Card 2: %s', 'three-card-tarot'), $cards[1]->card_name),
-                stripslashes(wp_kses_post($cards[1]->card_content)),
-                sprintf(__('Card 3: %s', 'three-card-tarot'), $cards[2]->card_name),
-                stripslashes(wp_kses_post($cards[2]->card_content))
+                __('Here is your personalized tarot reading based on the cards you selected:', 'three-card-tarot')
             );
+            
+            foreach ($cards as $index => $card) {
+                $card_number = $index + 1;
+                $orientation_text = ($card->orientation === 'reversed') ? ' (Reversed)' : '';
+                $content = ($card->orientation === 'reversed') ? $card->card_content_reversed : $card->card_content;
+                
+                $interpretation .= sprintf(
+                    '<h4>%s%s</h4><p>%s</p>',
+                    sprintf(__('Card %d: %s', 'three-card-tarot'), $card_number, $card->card_name),
+                    $orientation_text,
+                    stripslashes(wp_kses_post($content))
+                );
+            }
         }
         
         return $interpretation;

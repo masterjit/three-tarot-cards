@@ -8,7 +8,8 @@ jQuery(document).ready(function($) {
     var gameState = {
         selectedCards: [],
         maxCards: 3,
-        isReading: false
+        isReading: false,
+        enableReversedCards: tarot_frontend.settings.enable_reversed_cards || false
     };
     
     // Initialize the game
@@ -23,11 +24,23 @@ jQuery(document).ready(function($) {
         $('#reading-results').hide();
         $('#loading-indicator').hide();
         
+        // Clear selected cards grid
+        $('#selected-cards-grid').empty();
+        
         // Show cards area
         $('#tarot-cards-area').show();
         
+        // Ensure all cards show back cover
+        $('.tarot-card .card-inner').css('transform', 'rotateY(180deg) !important');
+        
+        // Re-enable clicking on all cards
+        $('.tarot-card').css('pointer-events', 'auto');
+        
         // Update progress
         updateProgress();
+        
+        console.log('Game initialized - all cards showing back cover');
+        console.log('Reversed cards enabled:', gameState.enableReversedCards);
     }
     
     // Load initial cards on page load
@@ -55,29 +68,49 @@ jQuery(document).ready(function($) {
         }
     }
     
-    // Show selected cards
+
+    
+    // Add a single card to the selected cards summary
+    function addCardToSummary(cardId, orientation, cardNumber) {
+        var cardElement = $('.tarot-card[data-card-id="' + cardId + '"]');
+        var cardName = cardElement.find('.card-front img').attr('alt');
+        var cardImage = cardElement.find('.card-front img').attr('src');
+        var orientationText = orientation === 'reversed' ? ' (Reversed)' : '';
+        
+        var selectedCard = $('<div class="selected-card" data-card-id="' + cardId + '">' +
+            '<img src="' + cardImage + '" alt="' + cardName + '">' +
+            '<h4>' + cardName + orientationText + '</h4>' +
+            '<p>Card ' + cardNumber + '</p>' +
+            '</div>');
+        
+        $('#selected-cards-grid').append(selectedCard);
+        console.log('Added card to summary:', cardName, 'Orientation:', orientation);
+    }
+    
+    // Show selected cards at the bottom
     function showSelectedCards() {
         var selectedCardsGrid = $('#selected-cards-grid');
         selectedCardsGrid.empty();
         
         // Get selected card data
-        gameState.selectedCards.forEach(function(cardId, index) {
-            var cardElement = $('.tarot-card[data-card-id="' + cardId + '"]');
-            var cardName = cardElement.find('.card-name').text();
+        gameState.selectedCards.forEach(function(cardData, index) {
+            var cardElement = $('.tarot-card[data-card-id="' + cardData.id + '"]');
+            var cardName = cardElement.find('.card-front img').attr('alt');
             var cardImage = cardElement.find('.card-front img').attr('src');
+            var orientationText = cardData.orientation === 'reversed' ? ' (Reversed)' : '';
             
             var selectedCard = $('<div class="selected-card">' +
                 '<img src="' + cardImage + '" alt="' + cardName + '">' +
-                '<h4>' + cardName + '</h4>' +
+                '<h4>' + cardName + orientationText + '</h4>' +
                 '<p>Card ' + (index + 1) + '</p>' +
                 '</div>');
             
             selectedCardsGrid.append(selectedCard);
         });
         
-        // Show selected cards section
+        // Show selected cards section at the bottom
         $('#selected-cards').show();
-        $('#tarot-cards-area').hide();
+        // Don't hide the cards area - keep it visible so selected cards appear below
     }
     
     // Handle get reading button
@@ -95,13 +128,21 @@ jQuery(document).ready(function($) {
         $('#loading-indicator').show();
         $('#selected-cards').hide();
         
+        // Prepare card data with orientations
+        var cardData = gameState.selectedCards.map(function(card) {
+            return {
+                id: card.id,
+                orientation: card.orientation
+            };
+        });
+        
         // Get reading via AJAX
         $.ajax({
             url: tarot_frontend.ajax_url,
             type: 'POST',
             data: {
                 action: 'tarot_get_reading',
-                card_ids: gameState.selectedCards,
+                card_data: cardData,
                 nonce: tarot_frontend.nonce
             },
             success: function(response) {
@@ -133,9 +174,10 @@ jQuery(document).ready(function($) {
         readingCards.empty();
         
         reading.cards.forEach(function(card, index) {
+            var orientationText = card.orientation === 'reversed' ? ' (Reversed)' : '';
             var readingCard = $('<div class="reading-card">' +
                 '<img src="' + card.card_image + '" alt="' + card.card_name + '">' +
-                '<h4>' + card.card_name + '</h4>' +
+                '<h4>' + card.card_name + orientationText + '</h4>' +
                 '<p>Card ' + (index + 1) + '</p>' +
                 '</div>');
             
@@ -177,6 +219,11 @@ jQuery(document).ready(function($) {
         setTimeout(function() {
             fetchNewRandomCards(function() {
                 initGame();
+                // Ensure all new cards show back cover
+                setTimeout(function() {
+                    $('.tarot-card .card-inner').css('transform', 'rotateY(180deg) !important');
+                    console.log('Draw Again - all cards showing back cover');
+                }, 100);
                 // Re-enable button and restore original text
                 button.prop('disabled', false).text(originalText);
             });
@@ -210,11 +257,13 @@ jQuery(document).ready(function($) {
     
     // Function to update cards display with new cards
     function updateCardsDisplay(cards) {
+        console.log('Updating cards display with:', cards);
         var cardsGrid = $('#cards-grid');
         cardsGrid.empty();
         
         cards.forEach(function(card, index) {
-            var cardHtml = '<div class="tarot-card" data-card-id="' + card.id + '" data-card-index="' + index + '">' +
+            // All cards start as upright by default (no orientation class needed)
+            var cardHtml = '<div class="tarot-card" data-card-id="' + card.id + '" data-card-index="' + index + '" data-orientation="upright">' +
                 '<div class="card-inner">' +
                 '<div class="card-front">' +
                 '<img src="' + card.image + '" alt="' + card.name + '">' +
@@ -228,6 +277,12 @@ jQuery(document).ready(function($) {
             cardsGrid.append(cardHtml);
         });
         
+        // Ensure all cards start showing back cover
+        setTimeout(function() {
+            $('.tarot-card .card-inner').css('transform', 'rotateY(180deg) !important');
+            console.log('All cards set to show back cover by default');
+        }, 100);
+        
         // Re-bind click events to new cards
         bindCardEvents();
     }
@@ -239,14 +294,29 @@ jQuery(document).ready(function($) {
             
             var card = $(this);
             var cardId = card.data('card-id');
+            var orientation = card.data('orientation');
             
             // Check if card is already selected
             if (card.hasClass('selected')) {
-                // Deselect card
+                // Deselect card - flip back to show back cover
                 card.removeClass('selected');
-                gameState.selectedCards = gameState.selectedCards.filter(function(id) {
-                    return id !== cardId;
+                card.find('.card-inner').css('transform', 'rotateY(180deg) !important');
+                
+                // Remove card from game state
+                gameState.selectedCards = gameState.selectedCards.filter(function(cardData) {
+                    return cardData.id !== cardId;
                 });
+                
+                // Remove card from summary
+                $('.selected-card[data-card-id="' + cardId + '"]').remove();
+                
+                // Hide selected cards section if no cards are selected
+                if (gameState.selectedCards.length === 0) {
+                    $('#selected-cards').hide();
+                }
+                
+                // Re-enable clicking on all cards since we now have less than 3 selected
+                $('.tarot-card').css('pointer-events', 'auto');
             } else {
                 // Check if we can select more cards
                 if (gameState.selectedCards.length >= gameState.maxCards) {
@@ -254,17 +324,47 @@ jQuery(document).ready(function($) {
                     return;
                 }
                 
-                // Select card
+                // Select card and immediately flip to show upright/reversed
                 card.addClass('selected');
-                gameState.selectedCards.push(cardId);
+                
+                // Determine if this card should be reversed (only if reversed feature is enabled)
+                var shouldBeReversed = gameState.enableReversedCards && Math.random() < 0.5;
+                var newOrientation = shouldBeReversed ? 'reversed' : 'upright';
+                
+                // Store orientation in game state (but don't show indicators yet)
+                card.attr('data-orientation', newOrientation);
+                
+                // Flip card to show front (without orientation indicators)
+                card.find('.card-inner').css({
+                    'transform': 'rotateY(0deg) !important',
+                    'transition': 'transform 0.6s ease-in-out'
+                });
+                
+                // Store orientation in game state
+                gameState.selectedCards.push({
+                    id: cardId,
+                    orientation: newOrientation
+                });
+                
+                // Add card to selected cards summary immediately
+                addCardToSummary(cardId, newOrientation, gameState.selectedCards.length);
+                
+                console.log('Card selected and flipped:', cardId, 'Orientation:', newOrientation);
             }
             
             // Update progress
             updateProgress();
             
+            // Show selected cards section if this is the first card
+            if (gameState.selectedCards.length === 1) {
+                $('#selected-cards').show();
+            }
+            
             // Check if we have enough cards
             if (gameState.selectedCards.length === gameState.maxCards) {
-                showSelectedCards();
+                // All cards selected - disable clicking on all cards
+                $('.tarot-card').css('pointer-events', 'none');
+                console.log('All 3 cards selected - clicking disabled on all cards');
             }
         });
     }
@@ -468,6 +568,15 @@ jQuery(document).ready(function($) {
         setTimeout(function() {
             cards.css('animation', '');
         }, 500);
+    }
+    
+    // Check if reversed cards are enabled
+    console.log('Frontend settings:', tarot_frontend.settings);
+    if (tarot_frontend.settings && tarot_frontend.settings.enable_reversed_cards) {
+        gameState.enableReversedCards = true;
+        console.log('Reversed cards enabled');
+    } else {
+        console.log('Reversed cards disabled');
     }
     
     // Load initial cards and initialize game on page load

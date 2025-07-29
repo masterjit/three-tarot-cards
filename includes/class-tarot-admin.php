@@ -75,9 +75,12 @@ class Tarot_Admin {
         wp_enqueue_style('tarot-admin', TAROT_PLUGIN_URL . 'assets/css/admin.css', array(), TAROT_PLUGIN_VERSION);
         wp_enqueue_script('tarot-admin', TAROT_PLUGIN_URL . 'assets/js/admin.js', array('jquery', 'media-upload'), TAROT_PLUGIN_VERSION, true);
         
+        $settings = get_option('tarot_settings', array());
+        
         wp_localize_script('tarot-admin', 'tarot_ajax', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('tarot_nonce'),
+            'settings' => $settings,
             'strings' => array(
                 'confirm_delete' => __('Are you sure you want to delete this card?', 'three-card-tarot'),
                 'saving' => __('Saving...', 'three-card-tarot'),
@@ -105,6 +108,7 @@ class Tarot_Admin {
             'card_name' => '',
             'card_image' => '',
             'card_content' => '',
+            'card_content_reversed' => '',
             'card_position' => 0,
             'is_active' => 1
         );
@@ -124,6 +128,7 @@ class Tarot_Admin {
                 'total_cards_display' => intval($_POST['total_cards_display']),
                 'enable_animations' => isset($_POST['enable_animations']),
                 'enable_sound' => isset($_POST['enable_sound']),
+                'enable_reversed_cards' => isset($_POST['enable_reversed_cards']),
                 'card_back_image' => esc_url_raw($_POST['card_back_image']),
                 'reading_title' => sanitize_text_field($_POST['reading_title']),
                 'reading_description' => sanitize_textarea_field($_POST['reading_description'])
@@ -152,6 +157,7 @@ class Tarot_Admin {
             'card_name' => sanitize_text_field($_POST['card_name']),
             'card_image' => esc_url_raw($_POST['card_image']),
             'card_content' => wp_kses_post($_POST['card_content']),
+            'card_content_reversed' => wp_kses_post($_POST['card_content_reversed'] ?? ''),
             'card_position' => intval($_POST['card_position']),
             'is_active' => intval($_POST['is_active'])
         );
