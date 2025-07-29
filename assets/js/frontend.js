@@ -30,8 +30,9 @@ jQuery(document).ready(function($) {
         // Show cards area
         $('#tarot-cards-area').show();
         
-        // Ensure all cards show back cover
+        // Ensure all cards show back cover and reset transform
         $('.tarot-card .card-inner').css('transform', 'rotateY(180deg) !important');
+        $('.tarot-card').css('transform', 'none'); // Reset lift effect
         
         // Re-enable clicking on all cards
         $('.tarot-card').css('pointer-events', 'auto');
@@ -47,11 +48,22 @@ jQuery(document).ready(function($) {
     function loadInitialCards() {
         fetchNewRandomCards(function() {
             initGame();
+            // Adjust card widths after initial load
+            setTimeout(function() {
+                adjustCardWidths(tarot_frontend.total_cards_display);
+            }, 200);
         });
     }
     
     // Initialize card events
     bindCardEvents();
+    
+    // Handle window resize to adjust card widths
+    $(window).on('resize', function() {
+        if ($('.tarot-card').length > 0) {
+            adjustCardWidths($('.tarot-card').length);
+        }
+    });
     
     // Update progress display
     function updateProgress() {
@@ -277,6 +289,9 @@ jQuery(document).ready(function($) {
             cardsGrid.append(cardHtml);
         });
         
+        // Adjust card widths based on number of cards
+        adjustCardWidths(cards.length);
+        
         // Ensure all cards start showing back cover
         setTimeout(function() {
             $('.tarot-card .card-inner').css('transform', 'rotateY(180deg) !important');
@@ -285,6 +300,57 @@ jQuery(document).ready(function($) {
         
         // Re-bind click events to new cards
         bindCardEvents();
+    }
+    
+    // Function to adjust card widths based on number of cards
+    function adjustCardWidths(cardCount) {
+        var containerWidth = $('#cards-grid').width();
+        var maxCardWidth = 192; // Original card width
+        var minCardWidth = 80; // Minimum card width
+        var overlap = 30; // Overlap amount
+        
+        // Responsive adjustments
+        if (window.innerWidth <= 480) {
+            maxCardWidth = 110;
+            minCardWidth = 60;
+            overlap = 15;
+        } else if (window.innerWidth <= 768) {
+            maxCardWidth = 140;
+            minCardWidth = 70;
+            overlap = 20;
+        }
+        
+        // Calculate available width (container width minus padding)
+        var availableWidth = containerWidth - 40; // 20px padding on each side
+        
+        // Calculate optimal card width
+        var optimalWidth = Math.max(minCardWidth, Math.min(maxCardWidth, (availableWidth + (cardCount - 1) * overlap) / cardCount));
+        
+        // Apply width to all cards and set z-index
+        $('.tarot-card').each(function(index) {
+            var card = $(this);
+            var isSelected = card.hasClass('selected');
+            var currentTransform = isSelected ? 'translateY(-15px)' : 'none';
+            
+            card.css({
+                'width': optimalWidth + 'px',
+                'height': (optimalWidth * 1.73) + 'px', // Maintain aspect ratio
+                'z-index': cardCount - index, // First card gets highest z-index
+                'transform': currentTransform // Preserve lift effect for selected cards
+            });
+        });
+        
+        // Update card-inner height
+        $('.card-inner').css('height', (optimalWidth * 1.73) + 'px');
+        
+        console.log('Adjusted card widths:', {
+            cardCount: cardCount,
+            containerWidth: containerWidth,
+            availableWidth: availableWidth,
+            optimalWidth: optimalWidth,
+            cardHeight: (optimalWidth * 1.73),
+            screenWidth: window.innerWidth
+        });
     }
     
     // Function to bind card click events
@@ -298,9 +364,10 @@ jQuery(document).ready(function($) {
             
             // Check if card is already selected
             if (card.hasClass('selected')) {
-                // Deselect card - flip back to show back cover
+                // Deselect card - flip back to show back cover and remove lift
                 card.removeClass('selected');
                 card.find('.card-inner').css('transform', 'rotateY(180deg) !important');
+                card.css('transform', 'none'); // Remove lift effect
                 
                 // Remove card from game state
                 gameState.selectedCards = gameState.selectedCards.filter(function(cardData) {
@@ -327,6 +394,9 @@ jQuery(document).ready(function($) {
                 // Select card and immediately flip to show upright/reversed
                 card.addClass('selected');
                 
+                // Apply lift effect
+                card.css('transform', 'translateY(-15px)');
+                
                 // Determine if this card should be reversed (only if reversed feature is enabled)
                 var shouldBeReversed = gameState.enableReversedCards && Math.random() < 0.5;
                 var newOrientation = shouldBeReversed ? 'reversed' : 'upright';
@@ -349,7 +419,7 @@ jQuery(document).ready(function($) {
                 // Add card to selected cards summary immediately
                 addCardToSummary(cardId, newOrientation, gameState.selectedCards.length);
                 
-                console.log('Card selected and flipped:', cardId, 'Orientation:', newOrientation);
+                console.log('Card selected and flipped:', cardId, 'Orientation:', newOrientation, 'Lifted up');
             }
             
             // Update progress

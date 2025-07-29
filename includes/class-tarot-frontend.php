@@ -36,6 +36,7 @@ class Tarot_Frontend {
             'nonce' => wp_create_nonce('tarot_frontend_nonce'),
             'card_back_image' => $this->get_card_back_image(),
             'settings' => $settings,
+            'total_cards_display' => $settings['total_cards_display'] ?? 8,
             'strings' => array(
                 'select_card' => __('Select a card', 'three-card-tarot'),
                 'card_selected' => __('Card selected', 'three-card-tarot'),
