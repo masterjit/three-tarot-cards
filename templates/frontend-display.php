@@ -22,19 +22,12 @@ $description = !empty($atts['description']) ? $atts['description'] : ($settings[
     <div class="tarot-game-area">
         <!-- Card Selection Area -->
         <div class="tarot-cards-area" id="tarot-cards-area">
-            <div class="cards-grid">
-                <?php foreach ($cards as $index => $card) : ?>
-                    <div class="tarot-card" data-card-id="<?php echo esc_attr($card->id); ?>" data-card-index="<?php echo esc_attr($index); ?>">
-                        <div class="card-inner">
-                            <div class="card-front">
-                                <img src="<?php echo esc_url($card->card_image); ?>" alt="<?php echo esc_attr($card->card_name); ?>">                                
-                            </div>
-                            <div class="card-back">
-                                <img src="<?php echo esc_url($this->get_card_back_image()); ?>" alt="<?php echo esc_attr__('Card Back', 'three-card-tarot'); ?>">
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+            <div class="cards-grid" id="cards-grid">
+                <!-- Cards will be loaded via AJAX -->
+                <div class="loading-cards">
+                    <div class="spinner"></div>
+                    <p><?php echo esc_html__('Loading cards...', 'three-card-tarot'); ?></p>
+                </div>
             </div>
         </div>
         
