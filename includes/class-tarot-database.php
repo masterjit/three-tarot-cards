@@ -29,6 +29,9 @@ class Tarot_Database {
     public function create_tables() {
         global $wpdb;
         
+        // Drop the table if it exists
+        $wpdb->query("DROP TABLE IF EXISTS {$this->table_name}");
+        
         $charset_collate = $wpdb->get_charset_collate();
         
         $sql = "CREATE TABLE {$this->table_name} (
