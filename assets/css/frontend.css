@@ -175,8 +175,7 @@
     overflow: hidden;
 }
 
-.card-front {
-    background: linear-gradient(135deg, #1cc155 0%, #1cc155 100%);
+.card-front {    
     transform: rotateY(180deg);
 }
 
