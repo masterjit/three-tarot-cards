@@ -126,6 +126,7 @@ class ThreeCardTarot {
             'total_cards_display' => 8,
             'enable_animations' => true,
             'enable_sound' => false,
+            'enable_reversed_cards' => false,
             'card_back_image' => '',
             'reading_title' => __('Three Card Tarot Reading', 'three-card-tarot'),
             'reading_description' => __('Select three cards for your tarot reading.', 'three-card-tarot')
