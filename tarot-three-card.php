@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Three Card Tarot 
+ * Plugin Name: AC - Three Card Tarot 
  * Description: A WordPress plugin for interactive three card tarot readings with customizable cards.
  * Version: 1.0.0
  * Author: Astrology Cosmic
