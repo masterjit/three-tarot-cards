@@ -57,66 +57,12 @@ class Tarot_Database {
      * Insert default cards
      */
     public function insert_default_cards() {
-        $default_cards = array(
-            array(
-                'card_name' => 'The Fool',
-                'card_image' => TAROT_PLUGIN_URL . 'assets/images/cards/placeholder.svg',
-                'card_content' => 'The Fool represents new beginnings, innocence, spontaneity, and a free spirit. This card suggests taking a leap of faith and embracing new opportunities with an open heart.',
-                'card_content_reversed' => 'The Fool reversed suggests recklessness, risk-taking without consideration, and being naive or foolish. It warns against acting without thinking or making impulsive decisions.',
-                'card_position' => 1
-            ),
-            array(
-                'card_name' => 'The Magician',
-                'card_image' => TAROT_PLUGIN_URL . 'assets/images/cards/placeholder.svg',
-                'card_content' => 'The Magician represents manifestation, resourcefulness, power, and inspired action. This card indicates that you have all the tools and resources needed to achieve your goals.',
-                'card_content_reversed' => 'The Magician reversed suggests manipulation, poor planning, untapped talents, and lack of focus. It indicates missed opportunities or not using your abilities effectively.',
-                'card_position' => 2
-            ),
-            array(
-                'card_name' => 'The High Priestess',
-                'card_image' => TAROT_PLUGIN_URL . 'assets/images/cards/placeholder.svg',
-                'card_content' => 'The High Priestess represents intuition, sacred knowledge, divine feminine, and the subconscious mind. This card suggests listening to your inner voice and trusting your instincts.',
-                'card_content_reversed' => 'The High Priestess reversed suggests secrets, disconnected from intuition, withdrawal, and silence. It indicates not listening to your inner voice or ignoring your instincts.',
-                'card_position' => 3
-            ),
-            array(
-                'card_name' => 'The Empress',
-                'card_image' => TAROT_PLUGIN_URL . 'assets/images/cards/placeholder.svg',
-                'card_content' => 'The Empress represents femininity, beauty, nature, abundance, and nurturing. This card indicates growth, creativity, and the manifestation of your desires.',
-                'card_content_reversed' => 'The Empress reversed suggests creative block, dependence on others, emptiness, and lack of growth. It indicates feeling uninspired or disconnected from your creative energy.',
-                'card_position' => 4
-            ),
-            array(
-                'card_name' => 'The Emperor',
-                'card_image' => TAROT_PLUGIN_URL . 'assets/images/cards/placeholder.svg',
-                'card_content' => 'The Emperor represents authority, structure, control, and fatherhood. This card suggests taking charge of your situation and establishing order in your life.',
-                'card_content_reversed' => 'The Emperor reversed suggests excessive control, rigidity, lack of discipline, and immaturity. It indicates being too controlling or not taking responsibility for your actions.',
-                'card_position' => 5
-            ),
-            array(
-                'card_name' => 'The Hierophant',
-                'card_image' => TAROT_PLUGIN_URL . 'assets/images/cards/placeholder.svg',
-                'card_content' => 'The Hierophant represents tradition, conformity, morality, and ethics. This card suggests following established systems and seeking guidance from mentors or spiritual leaders.',
-                'card_content_reversed' => 'The Hierophant reversed suggests challenging beliefs, personal morality, freedom, and challenging the status quo. It indicates questioning traditional values or breaking free from conventions.',
-                'card_position' => 6
-            ),
-            array(
-                'card_name' => 'The Lovers',
-                'card_image' => TAROT_PLUGIN_URL . 'assets/images/cards/placeholder.svg',
-                'card_content' => 'The Lovers represent love, harmony, relationships, values alignment, and choices. This card indicates important decisions about love, partnerships, and personal values.',
-                'card_content_reversed' => 'The Lovers reversed suggests disharmony, imbalance, misalignment of values, and discord. It indicates relationship problems or making choices that don\'t align with your true values.',
-                'card_position' => 7
-            ),
-            array(
-                'card_name' => 'The Chariot',
-                'card_image' => TAROT_PLUGIN_URL . 'assets/images/cards/placeholder.svg',
-                'card_content' => 'The Chariot represents control, willpower, victory, assertion, and determination. This card suggests overcoming obstacles through discipline and focused action.',
-                'card_content_reversed' => 'The Chariot reversed suggests lack of control, lack of direction, aggression, and no self-discipline. It indicates feeling out of control or lacking the willpower to achieve your goals.',
-                'card_position' => 8
-            )
-        );
+        // Load the comprehensive tarot cards data
+        require_once TAROT_PLUGIN_PATH . 'includes/tarot-cards-data.php';
         
-        foreach ($default_cards as $card) {
+        $all_cards = Tarot_Cards_Data::get_all_cards();
+        
+        foreach ($all_cards as $card) {
             $this->insert_card($card);
         }
     }

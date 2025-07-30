@@ -68,6 +68,7 @@ class ThreeCardTarot {
         require_once TAROT_PLUGIN_PATH . 'includes/class-tarot-admin.php';
         require_once TAROT_PLUGIN_PATH . 'includes/class-tarot-frontend.php';
         require_once TAROT_PLUGIN_PATH . 'includes/class-tarot-api.php';
+        require_once TAROT_PLUGIN_PATH . 'includes/tarot-cards-data.php';
     }
     
     /**
