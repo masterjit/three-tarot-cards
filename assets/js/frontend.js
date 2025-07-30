@@ -88,8 +88,10 @@ jQuery(document).ready(function($) {
         var cardImage = cardElement.find('.card-front img').attr('src');
         var orientationText = orientation === 'reversed' ? ' (Reversed)' : '';
         
+
+        
         var selectedCard = $('<div class="selected-card" data-card-id="' + cardId + '">' +
-            '<img src="' + cardImage + '" alt="' + cardName + '">' +
+            '<img src="' + cardImage + '" alt="' + cardName + '"' + (orientation === 'reversed' ? ' class="card-image-reversed"' : '') + '>' +
             '<h4>' + cardName + orientationText + '</h4>' +
             '<p>Card ' + cardNumber + '</p>' +
             '</div>');
@@ -110,7 +112,7 @@ jQuery(document).ready(function($) {
             var orientationText = cardData.orientation === 'reversed' ? ' (Reversed)' : '';
             
             var selectedCard = $('<div class="selected-card">' +
-                '<img src="' + cardImage + '" alt="' + cardName + '">' +
+                '<img src="' + cardImage + '" alt="' + cardName + '"' + (cardData.orientation === 'reversed' ? ' class="card-image-reversed"' : '') + '>' +
                 '<h4>' + cardName + orientationText + '</h4>' +
                 '<p>Card ' + (index + 1) + '</p>' +
                 '</div>');
@@ -189,7 +191,7 @@ jQuery(document).ready(function($) {
         reading.cards.forEach(function(card, index) {
             var orientationText = card.orientation === 'reversed' ? ' (Reversed)' : '';
             var readingCard = $('<div class="reading-card">' +
-                '<img src="' + card.card_image + '" alt="' + card.card_name + '">' +
+                '<img src="' + card.card_image + '" alt="' + card.card_name + '"' + (card.orientation === 'reversed' ? ' class="card-image-reversed"' : '') + '>' +
                 '<h4>' + card.card_name + orientationText + '</h4>' +
                 '<p>Card ' + (index + 1) + '</p>' +
                 '</div>');
@@ -397,7 +399,7 @@ jQuery(document).ready(function($) {
                 var shouldBeReversed = gameState.enableReversedCards && Math.random() < 0.5;
                 var newOrientation = shouldBeReversed ? 'reversed' : 'upright';
                 
-                // Store orientation in game state (but don't show indicators yet)
+                // Store orientation in game state (no visual change to initial cards)
                 card.attr('data-orientation', newOrientation);
                 
                 // Flip card to show front (without orientation indicators)

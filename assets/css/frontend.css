@@ -85,19 +85,12 @@
     transform: translateY(-15px);
 }
 
-/* Reversed Card Styles */
-.tarot-card.card-reversed .card-front {
-    transform: rotateY(180deg); /* Front image is rotated 180° */
+/* Additional class for reversed images in summaries and readings */
+.card-image-reversed {
+    transform: scaleY(-1) !important;
 }
 
-.tarot-card.card-reversed .card-back {
-    transform: rotateY(0deg);
-}
 
-/* Ensure all cards (both upright and reversed) start with back cover showing */
-.tarot-card.card-reversed .card-inner {
-    transform: rotateY(180deg) !important; /* Default state shows back cover */
-}
 
 /* Force all cards to show back cover by default */
 .tarot-card .card-inner {
