@@ -620,4 +620,209 @@
         margin: 10px 0;
         width: 100%;
     }
+}
+
+/* Daily Tarot Styles */
+.daily-tarot-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.daily-tarot-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.daily-tarot-title {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.daily-tarot-date {
+    font-size: 1.2em;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.daily-tarot-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.daily-card-image {
+    width: 300px;
+    height: 520px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.daily-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.daily-card-info {
+    text-align: center;
+    max-width: 500px;
+}
+
+.daily-card-name {
+    font-size: 2em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.orientation-badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.5em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.orientation-badge.upright {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.orientation-badge.reversed {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.daily-card-meaning h4 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.daily-card-meaning p {
+    color: #495057;
+    line-height: 1.8;
+    font-size: 1.1em;
+}
+
+.daily-tarot-history {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #e9ecef;
+}
+
+.daily-tarot-history h4 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.history-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.history-card {
+    text-align: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.history-card:hover {
+    transform: translateY(-3px);
+}
+
+.history-card img {
+    width: 80px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.history-card-name {
+    font-size: 0.9em;
+    color: #2c3e50;
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.history-card-date {
+    font-size: 0.8em;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.daily-tarot-error {
+    text-align: center;
+    padding: 40px;
+    color: #7f8c8d;
+    font-size: 1.1em;
+}
+
+/* Responsive Daily Tarot */
+@media (max-width: 768px) {
+    .daily-tarot-container {
+        padding: 15px;
+    }
+    
+    .daily-tarot-title {
+        font-size: 2em;
+    }
+    
+    .daily-card-image {
+        width: 250px;
+        height: 433px;
+    }
+    
+    .daily-card-name {
+        font-size: 1.5em;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .history-cards {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .daily-tarot-title {
+        font-size: 1.5em;
+    }
+    
+    .daily-card-image {
+        width: 200px;
+        height: 347px;
+    }
+    
+    .daily-card-name {
+        font-size: 1.3em;
+    }
+    
+    .history-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
 } 

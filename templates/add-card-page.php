@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     <h1><?php echo esc_html__('Add New Tarot Card', 'three-card-tarot'); ?></h1>
     
     <div class="tarot-admin-header">
-        <a href="<?php echo admin_url('admin.php?page=tarot-cards'); ?>" class="button">
+        <a href="<?php echo admin_url('admin.php?page=three-card-tarot'); ?>" class="button">
             <?php echo esc_html__('← Back to All Cards', 'three-card-tarot'); ?>
         </a>
     </div>
@@ -92,7 +92,7 @@ if (!defined('ABSPATH')) {
             
             <p class="submit">
                 <button type="submit" class="button button-primary"><?php echo esc_html__('Add Card', 'three-card-tarot'); ?></button>
-                <a href="<?php echo admin_url('admin.php?page=tarot-cards'); ?>" class="button"><?php echo esc_html__('Cancel', 'three-card-tarot'); ?></a>
+                <a href="<?php echo admin_url('admin.php?page=three-card-tarot'); ?>" class="button"><?php echo esc_html__('Cancel', 'three-card-tarot'); ?></a>
             </p>
         </form>
     </div>
@@ -149,7 +149,7 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 if (response.success) {
                     alert(response.data.message || 'Card added successfully!');
-                    window.location.href = '<?php echo admin_url('admin.php?page=tarot-cards'); ?>';
+                    window.location.href = '<?php echo admin_url('admin.php?page=three-card-tarot'); ?>';
                 } else {
                     alert(response.data.message || 'Error adding card');
                 }

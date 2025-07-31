@@ -27,7 +27,7 @@ $settings = wp_parse_args($settings, $default_settings);
     <h1><?php echo esc_html__('Three Card Tarot Settings', 'three-card-tarot'); ?></h1>
     
     <div class="tarot-admin-header">
-        <a href="<?php echo admin_url('admin.php?page=tarot-cards'); ?>" class="button">
+        <a href="<?php echo admin_url('admin.php?page=three-card-tarot'); ?>" class="button">
             <?php echo esc_html__('← Back to Cards', 'three-card-tarot'); ?>
         </a>
     </div>
@@ -129,11 +129,26 @@ $settings = wp_parse_args($settings, $default_settings);
         </table>
         
         <h2><?php echo esc_html__('Shortcode Usage', 'three-card-tarot'); ?></h2>
+        
+        <h3><?php echo esc_html__('Three Card Tarot Reading', 'three-card-tarot'); ?></h3>
         <p><?php echo esc_html__('Use this shortcode to display the tarot reading interface on any page or post:', 'three-card-tarot'); ?></p>
         <code>[ac_three_tarot_card_reading]</code>
         
         <p><?php echo esc_html__('Or with custom parameters:', 'three-card-tarot'); ?></p>
         <code>[ac_three_tarot_card_reading title="My Custom Reading" description="Select your cards wisely"]</code>
+        
+        <h3><?php echo esc_html__('Daily Tarot Card', 'three-card-tarot'); ?></h3>
+        <p><?php echo esc_html__('Use this shortcode to display today\'s daily tarot card on any page or post:', 'three-card-tarot'); ?></p>
+        <code>[ac_daily_tarot]</code>
+        
+        <p><?php echo esc_html__('Or with custom parameters:', 'three-card-tarot'); ?></p>
+        <code>[ac_daily_tarot show_history="true" history_limit="7"]</code>
+        
+        <p class="description">
+            <strong><?php echo esc_html__('Available parameters for Daily Tarot:', 'three-card-tarot'); ?></strong><br>
+            • <code>show_history</code> - <?php echo esc_html__('Show recent daily cards (true/false, default: false)', 'three-card-tarot'); ?><br>
+            • <code>history_limit</code> - <?php echo esc_html__('Number of recent cards to show (default: 7)', 'three-card-tarot'); ?>
+        </p>
         
         <h2><?php echo esc_html__('API Endpoints', 'three-card-tarot'); ?></h2>
         <p><?php echo esc_html__('The plugin provides REST API endpoints for external access:', 'three-card-tarot'); ?></p>

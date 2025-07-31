@@ -4,6 +4,21 @@
 
 jQuery(document).ready(function($) {
     
+    // Check if tarot_ajax object exists
+    if (typeof tarot_ajax === 'undefined') {
+        console.error('tarot_ajax object not found');
+        return;
+    }
+    
+    // Prevent conflicts with other plugins by ensuring our elements exist
+    if ($('.daily-tarot-admin-container').length > 0) {
+        // We're on the daily tarot page, ensure our dropdowns work properly
+        $('#card-select, #orientation-select').on('click', function(e) {
+            // Prevent event bubbling that might interfere with other plugins
+            e.stopPropagation();
+        });
+    }
+    
     // Initialize media uploader
     var mediaUploader;
     
@@ -59,6 +74,12 @@ jQuery(document).ready(function($) {
         var cardId = $(this).data('card-id');
         var modal = $('#edit-card-modal');
         
+        // Check if modal exists
+        if (!modal.length) {
+            console.error('Edit modal not found');
+            return;
+        }
+        
         // Show loading state
         $(this).addClass('loading');
         
@@ -113,6 +134,12 @@ jQuery(document).ready(function($) {
         var cardId = $(this).data('card-id');
         var cardItem = $(this).closest('.tarot-card-item');
         
+        // Check if card item exists
+        if (!cardItem.length) {
+            console.error('Card item not found');
+            return;
+        }
+        
         if (!confirm(tarot_ajax.strings.confirm_delete || 'Are you sure you want to delete this card?')) {
             return;
         }
@@ -162,6 +189,13 @@ jQuery(document).ready(function($) {
         
         var form = $(this);
         var submitButton = form.find('button[type="submit"]');
+        
+        // Check if form and submit button exist
+        if (!form.length || !submitButton.length) {
+            console.error('Edit form or submit button not found');
+            return;
+        }
+        
         var originalText = submitButton.text();
         
         // Show loading state
@@ -269,8 +303,8 @@ jQuery(document).ready(function($) {
         }
     });
     
-    // Initialize tooltips
-    $('[title]').tooltip();
+    // Initialize tooltips (commented out - requires jQuery UI)
+    // $('[title]').tooltip();
     
     // Handle responsive design
     function handleResponsive() {
@@ -288,6 +322,8 @@ jQuery(document).ready(function($) {
     $(window).on('resize', handleResponsive);
     
     // Handle card sorting (if implemented)
+    // Note: Requires jQuery UI sortable plugin
+    /*
     if ($.fn.sortable) {
         $('.tarot-cards-grid').sortable({
             handle: '.card-details',
@@ -314,6 +350,7 @@ jQuery(document).ready(function($) {
             }
         });
     }
+    */
     
     // Handle bulk actions
     $('.bulk-action-selector').on('change', function() {

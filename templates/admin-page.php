@@ -13,10 +13,10 @@ if (!defined('ABSPATH')) {
     <h1><?php echo esc_html__('Three Card Tarot - Manage Cards', 'three-card-tarot'); ?></h1>
     
     <div class="tarot-admin-header">
-        <a href="<?php echo admin_url('admin.php?page=tarot-add-card'); ?>" class="button button-primary">
+        <a href="<?php echo admin_url('admin.php?page=three-card-tarot-add'); ?>" class="button button-primary">
             <?php echo esc_html__('Add New Card', 'three-card-tarot'); ?>
         </a>
-        <a href="<?php echo admin_url('admin.php?page=tarot-settings'); ?>" class="button">
+        <a href="<?php echo admin_url('admin.php?page=three-card-tarot-settings'); ?>" class="button">
             <?php echo esc_html__('Settings', 'three-card-tarot'); ?>
         </a>
     </div>
@@ -29,7 +29,11 @@ if (!defined('ABSPATH')) {
                         <?php if (!empty($card->card_image)) : ?>
                             <img src="<?php echo esc_url($card->card_image); ?>" alt="<?php echo esc_attr($card->card_name); ?>">
                         <?php else : ?>
-                            <div class="no-image"><?php echo esc_html__('No Image', 'three-card-tarot'); ?></div>
+                            <div class="no-image">
+                                <?php echo esc_html__('Image Not Available', 'three-card-tarot'); ?>
+                                <br>
+                                <small><?php echo esc_html__('Click Edit to add an image', 'three-card-tarot'); ?></small>
+                            </div>
                         <?php endif; ?>
                     </div>
                     
@@ -61,7 +65,7 @@ if (!defined('ABSPATH')) {
         <?php else : ?>
             <div class="no-cards">
                 <p><?php echo esc_html__('No cards found. Add your first card!', 'three-card-tarot'); ?></p>
-                <a href="<?php echo admin_url('admin.php?page=tarot-add-card'); ?>" class="button button-primary">
+                <a href="<?php echo admin_url('admin.php?page=three-card-tarot-add'); ?>" class="button button-primary">
                     <?php echo esc_html__('Add First Card', 'three-card-tarot'); ?>
                 </a>
             </div>
