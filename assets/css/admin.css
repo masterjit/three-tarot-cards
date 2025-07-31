@@ -34,30 +34,51 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.card-image {
+.tarot-cards-grid .card-image {
     text-align: center;
     margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.card-image img {
+.tarot-cards-grid .card-image img {
     max-width: 100%;
     height: 150px;
     object-fit: cover;
     border-radius: 4px;
     border: 1px solid #ddd;
+    display: block;
+    margin: 0 auto;
 }
 
 .no-image {
     width: 100%;
     height: 150px;
-    background: #f5f5f5;
-    border: 2px dashed #ddd;
-    border-radius: 4px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #666;
-    font-style: italic;
+    color: #6c757d;
+    font-style: normal;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.no-image:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    border-color: #adb5bd;
+    color: #495057;
+}
+
+.no-image::before {
+    content: "🃏";
+    font-size: 2em;
+    margin-bottom: 8px;
+    opacity: 0.7;
 }
 
 .card-details h3 {
@@ -540,4 +561,216 @@ code {
     border: 1px solid #ddd;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} 
+
+/* Admin Styles */
+.tarot-admin-container {
+    max-width: 1200px;
+    margin: 20px 0;
+}
+
+.tarot-admin-header {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.tarot-admin-title {
+    margin: 0 0 10px 0;
+    color: #23282d;
+}
+
+.tarot-admin-description {
+    color: #666;
+    margin: 0;
+}
+
+/* Daily Tarot Admin Styles */
+.daily-tarot-admin-container {
+    max-width: 1200px;
+    margin: 20px 0;
+}
+
+.today-card-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.today-card-display {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin: 20px 0;
+}
+
+.daily-tarot-admin-container .card-image {
+    width: 200px;
+    height: 347px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.daily-tarot-admin-container .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-info {
+    flex: 1;
+}
+
+.card-info h3 {
+    margin: 0 0 10px 0;
+    color: #23282d;
+    font-size: 1.5em;
+}
+
+.orientation {
+    margin: 10px 0;
+    padding: 5px 10px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.meaning h4 {
+    margin: 20px 0 10px 0;
+    color: #23282d;
+}
+
+.meaning p {
+    line-height: 1.6;
+    color: #666;
+}
+
+.card-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.card-actions .button {
+    margin-right: 10px;
+}
+
+.card-selection-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-selection-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+}
+
+.card-selection-form label {
+    font-weight: bold;
+    color: #23282d;
+}
+
+.card-selection-form select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+    /* Ensure our dropdowns don't conflict with other plugins */
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* Prevent other plugins from interfering with our dropdowns */
+.daily-tarot-admin-container select {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.history-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.history-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.history-card {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.history-card img {
+    width: 100px;
+    height: 173px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.history-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 1em;
+    color: #23282d;
+}
+
+.history-info .date {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.history-info .orientation {
+    margin: 5px 0;
+    font-size: 0.8em;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.no-card-message {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive Admin */
+@media (max-width: 768px) {
+    .today-card-display {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .daily-tarot-admin-container .card-image {
+        width: 150px;
+        height: 260px;
+    }
+    
+    .history-cards {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
 } 

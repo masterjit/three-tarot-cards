@@ -4,6 +4,21 @@
 
 jQuery(document).ready(function($) {
     
+    // Check if tarot_ajax object exists
+    if (typeof tarot_ajax === 'undefined') {
+        console.error('tarot_ajax object not found');
+        return;
+    }
+    
+    // Prevent conflicts with other plugins by ensuring our elements exist
+    if ($('.daily-tarot-admin-container').length > 0) {
+        // We're on the daily tarot page, ensure our dropdowns work properly
+        $('#card-select, #orientation-select').on('click', function(e) {
+            // Prevent event bubbling that might interfere with other plugins
+            e.stopPropagation();
+        });
+    }
+    
     // Initialize media uploader
     var mediaUploader;
     
@@ -59,6 +74,12 @@ jQuery(document).ready(function($) {
         var cardId = $(this).data('card-id');
         var modal = $('#edit-card-modal');
         
+        // Check if modal exists
+        if (!modal.length) {
+            console.error('Edit modal not found');
+            return;
+        }
+        
         // Show loading state
         $(this).addClass('loading');
         
@@ -79,8 +100,21 @@ jQuery(document).ready(function($) {
                     $('#edit-card-id').val(card.id);
                     $('#edit-card-name').val(card.card_name);
                     $('#edit-card-image').val(card.card_image);
-                    $('#edit-card-content').val(card.card_content);
-                    $('#edit-card-content-reversed').val(card.card_content_reversed || '');
+                    
+                    // Set content in WordPress editors
+                    if (typeof tinymce !== 'undefined') {
+                        if (tinymce.get('edit-card-content')) {
+                            tinymce.get('edit-card-content').setContent(card.card_content || '');
+                        }
+                        if (tinymce.get('edit-card-content-reversed')) {
+                            tinymce.get('edit-card-content-reversed').setContent(card.card_content_reversed || '');
+                        }
+                    } else {
+                        // Fallback for non-TinyMCE
+                        $('#edit-card-content').val(card.card_content);
+                        $('#edit-card-content-reversed').val(card.card_content_reversed || '');
+                    }
+                    
                     $('#edit-card-position').val(card.card_position);
                     $('#edit-is-active').prop('checked', card.is_active == 1);
                     
@@ -93,6 +127,16 @@ jQuery(document).ready(function($) {
                     
                     // Show modal
                     modal.show();
+                    
+                    // Ensure WordPress editors are properly initialized
+                    if (typeof tinymce !== 'undefined') {
+                        // Trigger editor initialization if needed
+                        setTimeout(function() {
+                            if (tinymce.get('edit-card-content')) {
+                                tinymce.get('edit-card-content').focus();
+                            }
+                        }, 100);
+                    }
                 } else {
                     alert(response.data.message || 'Error loading card data');
                 }
@@ -112,6 +156,12 @@ jQuery(document).ready(function($) {
         
         var cardId = $(this).data('card-id');
         var cardItem = $(this).closest('.tarot-card-item');
+        
+        // Check if card item exists
+        if (!cardItem.length) {
+            console.error('Card item not found');
+            return;
+        }
         
         if (!confirm(tarot_ajax.strings.confirm_delete || 'Are you sure you want to delete this card?')) {
             return;
@@ -162,6 +212,13 @@ jQuery(document).ready(function($) {
         
         var form = $(this);
         var submitButton = form.find('button[type="submit"]');
+        
+        // Check if form and submit button exist
+        if (!form.length || !submitButton.length) {
+            console.error('Edit form or submit button not found');
+            return;
+        }
+        
         var originalText = submitButton.text();
         
         // Show loading state
@@ -269,8 +326,8 @@ jQuery(document).ready(function($) {
         }
     });
     
-    // Initialize tooltips
-    $('[title]').tooltip();
+    // Initialize tooltips (commented out - requires jQuery UI)
+    // $('[title]').tooltip();
     
     // Handle responsive design
     function handleResponsive() {
@@ -288,6 +345,8 @@ jQuery(document).ready(function($) {
     $(window).on('resize', handleResponsive);
     
     // Handle card sorting (if implemented)
+    // Note: Requires jQuery UI sortable plugin
+    /*
     if ($.fn.sortable) {
         $('.tarot-cards-grid').sortable({
             handle: '.card-details',
@@ -314,6 +373,7 @@ jQuery(document).ready(function($) {
             }
         });
     }
+    */
     
     // Handle bulk actions
     $('.bulk-action-selector').on('change', function() {

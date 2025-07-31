@@ -19,6 +19,10 @@ class Tarot_Admin {
         add_action('wp_ajax_tarot_save_card', array($this, 'ajax_save_card'));
         add_action('wp_ajax_tarot_delete_card', array($this, 'ajax_delete_card'));
         add_action('wp_ajax_tarot_get_card', array($this, 'ajax_get_card'));
+        add_action('wp_ajax_tarot_update_positions', array($this, 'ajax_update_positions'));
+        add_action('wp_ajax_tarot_bulk_action', array($this, 'ajax_bulk_action'));
+        add_action('wp_ajax_tarot_set_daily_card', array($this, 'ajax_set_daily_card'));
+        add_action('wp_ajax_tarot_regenerate_daily_card', array($this, 'ajax_regenerate_daily_card'));
     }
     
     /**
@@ -27,38 +31,47 @@ class Tarot_Admin {
     public function add_admin_menu() {
         add_menu_page(
             __('Three Card Tarot', 'three-card-tarot'),
-            __('Three Tarot Cards', 'three-card-tarot'),
+            __('Three Card Tarot', 'three-card-tarot'),
             'manage_options',
-            'tarot-cards',
+            'three-card-tarot',
             array($this, 'admin_page'),
-            'dashicons-editor-ul',
+            'dashicons-admin-plugins',
             30
         );
         
         add_submenu_page(
-            'tarot-cards',
+            'three-card-tarot',
             __('All Cards', 'three-card-tarot'),
             __('All Cards', 'three-card-tarot'),
             'manage_options',
-            'tarot-cards',
+            'three-card-tarot',
             array($this, 'admin_page')
         );
         
         add_submenu_page(
-            'tarot-cards',
+            'three-card-tarot',
             __('Add New Card', 'three-card-tarot'),
             __('Add New Card', 'three-card-tarot'),
             'manage_options',
-            'tarot-add-card',
+            'three-card-tarot-add',
             array($this, 'add_card_page')
         );
         
         add_submenu_page(
-            'tarot-cards',
+            'three-card-tarot',
+            __('Daily Tarot', 'three-card-tarot'),
+            __('Daily Tarot', 'three-card-tarot'),
+            'manage_options',
+            'three-card-tarot-daily',
+            array($this, 'daily_tarot_page')
+        );
+        
+        add_submenu_page(
+            'three-card-tarot',
             __('Settings', 'three-card-tarot'),
             __('Settings', 'three-card-tarot'),
             'manage_options',
-            'tarot-settings',
+            'three-card-tarot-settings',
             array($this, 'settings_page')
         );
     }
@@ -67,13 +80,14 @@ class Tarot_Admin {
      * Enqueue admin scripts and styles
      */
     public function enqueue_admin_scripts($hook) {
-        if (strpos($hook, 'tarot') === false) {
+        if (strpos($hook, 'tarot') === false && strpos($hook, 'three-card-tarot') === false) {
             return;
         }
         
         wp_enqueue_media();
+        wp_enqueue_editor();
         wp_enqueue_style('tarot-admin', TAROT_PLUGIN_URL . 'assets/css/admin.css', array(), TAROT_PLUGIN_VERSION);
-        wp_enqueue_script('tarot-admin', TAROT_PLUGIN_URL . 'assets/js/admin.js', array('jquery', 'media-upload'), TAROT_PLUGIN_VERSION, true);
+        wp_enqueue_script('tarot-admin', TAROT_PLUGIN_URL . 'assets/js/admin.js', array('jquery', 'media-upload', 'editor'), TAROT_PLUGIN_VERSION, true);
         
         $settings = get_option('tarot_settings', array());
         
@@ -91,13 +105,24 @@ class Tarot_Admin {
     }
     
     /**
-     * Main admin page
+     * Admin page
      */
     public function admin_page() {
         $database = new Tarot_Database();
         $cards = $database->get_active_cards();
         
         include TAROT_PLUGIN_PATH . 'templates/admin-page.php';
+    }
+    
+    /**
+     * Daily tarot admin page
+     */
+    public function daily_tarot_page() {
+        $database = new Tarot_Database();
+        $today_card = $database->get_daily_card();
+        $all_cards = $database->get_active_cards();
+        
+        include TAROT_PLUGIN_PATH . 'templates/daily-tarot-admin.php';
     }
     
     /**
@@ -211,19 +236,127 @@ class Tarot_Admin {
     public function ajax_get_card() {
         check_ajax_referer('tarot_nonce', 'nonce');
         
-        if (!current_user_can('manage_options')) {
-            wp_die(__('You do not have permission to perform this action.', 'three-card-tarot'));
-        }
-        
+        $card_id = intval($_POST['card_id']);
         $database = new Tarot_Database();
-        $card = $database->get_card(intval($_POST['card_id']));
+        $card = $database->get_card($card_id);
         
         if ($card) {
             wp_send_json_success($card);
         } else {
-            wp_send_json_error(array(
-                'message' => __('Card not found.', 'three-card-tarot')
-            ));
+            wp_send_json_error(array('message' => __('Card not found.', 'three-card-tarot')));
         }
+    }
+    
+    /**
+     * AJAX set daily card
+     */
+    public function ajax_set_daily_card() {
+        check_ajax_referer('tarot_nonce', 'nonce');
+        
+        $card_id = intval($_POST['card_id']);
+        $orientation = sanitize_text_field($_POST['orientation']);
+        
+        if (!in_array($orientation, array('upright', 'reversed'))) {
+            $orientation = 'upright';
+        }
+        
+        $database = new Tarot_Database();
+        $result = $database->set_daily_card($card_id, $orientation);
+        
+        if ($result) {
+            wp_send_json_success(array('message' => __('Daily card updated successfully.', 'three-card-tarot')));
+        } else {
+            wp_send_json_error(array('message' => __('Error updating daily card.', 'three-card-tarot')));
+        }
+    }
+    
+    /**
+     * AJAX regenerate daily card
+     */
+    public function ajax_regenerate_daily_card() {
+        check_ajax_referer('tarot_nonce', 'nonce');
+        
+        $database = new Tarot_Database();
+        $result = $database->select_random_daily_card();
+        
+        if ($result) {
+            wp_send_json_success(array('message' => __('Daily card regenerated successfully.', 'three-card-tarot')));
+        } else {
+            wp_send_json_error(array('message' => __('Error regenerating daily card.', 'three-card-tarot')));
+        }
+    }
+    
+    /**
+     * AJAX update card positions
+     */
+    public function ajax_update_positions() {
+        check_ajax_referer('tarot_nonce', 'nonce');
+        
+        if (!current_user_can('manage_options')) {
+            wp_die(__('You do not have permission to perform this action.', 'three-card-tarot'));
+        }
+        
+        $positions = $_POST['positions'];
+        $database = new Tarot_Database();
+        $success = true;
+        
+        foreach ($positions as $card_id => $position) {
+            $result = $database->update_card_position(intval($card_id), intval($position));
+            if (!$result) {
+                $success = false;
+            }
+        }
+        
+        if ($success) {
+            wp_send_json_success(array('message' => __('Card positions updated successfully!', 'three-card-tarot')));
+        } else {
+            wp_send_json_error(array('message' => __('Failed to update some card positions.', 'three-card-tarot')));
+        }
+    }
+    
+    /**
+     * AJAX bulk action
+     */
+    public function ajax_bulk_action() {
+        check_ajax_referer('tarot_nonce', 'nonce');
+        
+        if (!current_user_can('manage_options')) {
+            wp_die(__('You do not have permission to perform this action.', 'three-card-tarot'));
+        }
+        
+        $action = sanitize_text_field($_POST['bulk_action']);
+        $card_ids = array_map('intval', $_POST['card_ids']);
+        $database = new Tarot_Database();
+        $success_count = 0;
+        
+        switch ($action) {
+            case 'activate':
+                foreach ($card_ids as $card_id) {
+                    if ($database->update_card_status($card_id, 1)) {
+                        $success_count++;
+                    }
+                }
+                break;
+                
+            case 'deactivate':
+                foreach ($card_ids as $card_id) {
+                    if ($database->update_card_status($card_id, 0)) {
+                        $success_count++;
+                    }
+                }
+                break;
+                
+            case 'delete':
+                foreach ($card_ids as $card_id) {
+                    if ($database->delete_card($card_id)) {
+                        $success_count++;
+                    }
+                }
+                break;
+        }
+        
+        wp_send_json_success(array(
+            'message' => sprintf(__('%d cards updated successfully!', 'three-card-tarot'), $success_count)
+        ));
     }
 } 

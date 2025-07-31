@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     <h1><?php echo esc_html__('Add New Tarot Card', 'three-card-tarot'); ?></h1>
     
     <div class="tarot-admin-header">
-        <a href="<?php echo admin_url('admin.php?page=tarot-cards'); ?>" class="button">
+        <a href="<?php echo admin_url('admin.php?page=three-card-tarot'); ?>" class="button">
             <?php echo esc_html__('← Back to All Cards', 'three-card-tarot'); ?>
         </a>
     </div>
@@ -52,7 +52,26 @@ if (!defined('ABSPATH')) {
                         <label for="card_content"><?php echo esc_html__('Card Interpretation (Upright)', 'three-card-tarot'); ?> *</label>
                     </th>
                     <td>
-                        <textarea id="card_content" name="card_content" rows="8" class="large-text" required><?php echo esc_textarea($card['card_content']); ?></textarea>
+                        <?php
+                        wp_editor(
+                            $card['card_content'],
+                            'card_content',
+                            array(
+                                'textarea_name' => 'card_content',
+                                'media_buttons' => false,
+                                'textarea_rows' => 8,
+                                'teeny' => true,
+                                'tinymce' => array(
+                                    'toolbar1' => 'bold,italic,underline,strikethrough,|,bullist,numlist,|,undo,redo',
+                                    'toolbar2' => '',
+                                    'toolbar3' => ''
+                                ),
+                                'quicktags' => array(
+                                    'buttons' => 'strong,em,link,ul,ol,li,close'
+                                )
+                            )
+                        );
+                        ?>
                         <p class="description"><?php echo esc_html__('Enter the interpretation and meaning of this tarot card when upright', 'three-card-tarot'); ?></p>
                     </td>
                 </tr>
@@ -62,7 +81,26 @@ if (!defined('ABSPATH')) {
                         <label for="card_content_reversed"><?php echo esc_html__('Card Interpretation (Reversed)', 'three-card-tarot'); ?></label>
                     </th>
                     <td>
-                        <textarea id="card_content_reversed" name="card_content_reversed" rows="8" class="large-text"><?php echo esc_textarea($card['card_content_reversed']); ?></textarea>
+                        <?php
+                        wp_editor(
+                            $card['card_content_reversed'],
+                            'card_content_reversed',
+                            array(
+                                'textarea_name' => 'card_content_reversed',
+                                'media_buttons' => false,
+                                'textarea_rows' => 8,
+                                'teeny' => true,
+                                'tinymce' => array(
+                                    'toolbar1' => 'bold,italic,underline,strikethrough,|,bullist,numlist,|,undo,redo',
+                                    'toolbar2' => '',
+                                    'toolbar3' => ''
+                                ),
+                                'quicktags' => array(
+                                    'buttons' => 'strong,em,link,ul,ol,li,close'
+                                )
+                            )
+                        );
+                        ?>
                         <p class="description"><?php echo esc_html__('Enter the interpretation and meaning of this tarot card when reversed (optional). This will be used when the global "Enable Reversed Cards" setting is turned on.', 'three-card-tarot'); ?></p>
                     </td>
                 </tr>
@@ -92,7 +130,7 @@ if (!defined('ABSPATH')) {
             
             <p class="submit">
                 <button type="submit" class="button button-primary"><?php echo esc_html__('Add Card', 'three-card-tarot'); ?></button>
-                <a href="<?php echo admin_url('admin.php?page=tarot-cards'); ?>" class="button"><?php echo esc_html__('Cancel', 'three-card-tarot'); ?></a>
+                <a href="<?php echo admin_url('admin.php?page=three-card-tarot'); ?>" class="button"><?php echo esc_html__('Cancel', 'three-card-tarot'); ?></a>
             </p>
         </form>
     </div>
@@ -121,9 +159,29 @@ jQuery(document).ready(function($) {
         $('#preview-name').text($(this).val() || 'Card Name');
     });
     
-    $('#card_content').on('input', function() {
-        $('#preview-content').text($(this).val() || 'Card interpretation will appear here...');
-    });
+    // Handle WordPress editor content updates for live preview
+    function updatePreviewContent() {
+        var content = '';
+        if (typeof tinymce !== 'undefined' && tinymce.get('card_content')) {
+            content = tinymce.get('card_content').getContent({format: 'text'});
+        } else {
+            content = $('#card_content').val();
+        }
+        $('#preview-content').text(content || 'Card interpretation will appear here...');
+    }
+    
+    // Listen for WordPress editor changes
+    if (typeof tinymce !== 'undefined') {
+        tinymce.on('AddEditor', function(e) {
+            if (e.editor.id === 'card_content') {
+                e.editor.on('keyup', updatePreviewContent);
+                e.editor.on('change', updatePreviewContent);
+            }
+        });
+    }
+    
+    // Fallback for non-TinyMCE
+    $('#card_content').on('input', updatePreviewContent);
     
     $('#card_image').on('input', function() {
         var imageUrl = $(this).val();
@@ -149,7 +207,7 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 if (response.success) {
                     alert(response.data.message || 'Card added successfully!');
-                    window.location.href = '<?php echo admin_url('admin.php?page=tarot-cards'); ?>';
+                    window.location.href = '<?php echo admin_url('admin.php?page=three-card-tarot'); ?>';
                 } else {
                     alert(response.data.message || 'Error adding card');
                 }

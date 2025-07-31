@@ -51,6 +51,22 @@ class Tarot_Database {
         
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
+        
+        // Create daily tarot table
+        $daily_table = $wpdb->prefix . 'ac_daily_tarot';
+        $wpdb->query("DROP TABLE IF EXISTS {$daily_table}");
+        
+        $daily_sql = "CREATE TABLE {$daily_table} (
+            id int(11) NOT NULL AUTO_INCREMENT,
+            card_id int(11) NOT NULL,
+            date date NOT NULL,
+            orientation enum('upright','reversed') DEFAULT 'upright',
+            created_at datetime DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY date (date)
+        ) $charset_collate;";
+        
+        dbDelta($daily_sql);
     }
     
     /**
@@ -211,5 +227,159 @@ class Tarot_Database {
         }
         
         return $wpdb->get_var($sql);
+    }
+    
+    /**
+     * Get daily tarot card
+     */
+    public function get_daily_card($date = null) {
+        global $wpdb;
+        
+        if (!$date) {
+            $date = current_time('Y-m-d');
+        }
+        
+        $daily_table = $wpdb->prefix . 'ac_daily_tarot';
+        
+        $daily_card = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$daily_table} WHERE date = %s",
+            $date
+        ));
+        
+        if (!$daily_card) {
+            // No card for today, select one
+            $daily_card = $this->select_random_daily_card();
+        }
+        
+        if ($daily_card) {
+            // Get full card details from main table
+            $card = $this->get_card($daily_card->card_id);
+            if ($card) {
+                $card->daily_orientation = $daily_card->orientation;
+                return $card;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Select random daily card
+     */
+    public function select_random_daily_card() {
+        global $wpdb;
+        
+        $date = current_time('Y-m-d');
+        $daily_table = $wpdb->prefix . 'ac_daily_tarot';
+        
+        // Get random card from existing cards
+        $card = $wpdb->get_row(
+            "SELECT * FROM {$this->table_name} WHERE is_active = 1 ORDER BY RAND() LIMIT 1"
+        );
+        
+        if ($card) {
+            // Check if reversed cards are enabled in settings
+            $settings = get_option('tarot_settings', array());
+            $enable_reversed_cards = isset($settings['enable_reversed_cards']) ? $settings['enable_reversed_cards'] : false;
+            
+            // Determine orientation based on setting
+            if ($enable_reversed_cards) {
+                $orientation = (rand(0, 1) == 1) ? 'reversed' : 'upright';
+            } else {
+                $orientation = 'upright'; // Only upright if setting is disabled
+            }
+            
+            $this->set_daily_card($card->id, $orientation, $date);
+            
+            // Return the daily card record
+            return $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM {$daily_table} WHERE date = %s",
+                $date
+            ));
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Set daily tarot card
+     */
+    public function set_daily_card($card_id, $orientation = 'upright', $date = null) {
+        global $wpdb;
+        
+        if (!$date) {
+            $date = current_time('Y-m-d');
+        }
+        
+        $daily_table = $wpdb->prefix . 'ac_daily_tarot';
+        
+        // Check if card exists
+        $card = $this->get_card($card_id);
+        if (!$card) {
+            return false;
+        }
+        
+        // Insert or update daily card
+        $result = $wpdb->replace(
+            $daily_table,
+            array(
+                'card_id' => $card_id,
+                'date' => $date,
+                'orientation' => $orientation
+            ),
+            array('%d', '%s', '%s')
+        );
+        
+        return $result;
+    }
+    
+    /**
+     * Get daily card history
+     */
+    public function get_daily_card_history($limit = 7) {
+        global $wpdb;
+        
+        $daily_table = $wpdb->prefix . 'ac_daily_tarot';
+        
+        $sql = $wpdb->prepare(
+            "SELECT dt.*, tc.card_name, tc.card_image, tc.card_content, tc.card_content_reversed 
+             FROM {$daily_table} dt 
+             JOIN {$this->table_name} tc ON dt.card_id = tc.id 
+             ORDER BY dt.date DESC 
+             LIMIT %d",
+            $limit
+        );
+        
+        return $wpdb->get_results($sql);
+    }
+    
+    /**
+     * Update card position
+     */
+    public function update_card_position($card_id, $position) {
+        global $wpdb;
+        
+        return $wpdb->update(
+            $this->table_name,
+            array('card_position' => $position),
+            array('id' => $card_id),
+            array('%d'),
+            array('%d')
+        );
+    }
+    
+    /**
+     * Update card status (active/inactive)
+     */
+    public function update_card_status($card_id, $status) {
+        global $wpdb;
+        
+        return $wpdb->update(
+            $this->table_name,
+            array('is_active' => $status),
+            array('id' => $card_id),
+            array('%d'),
+            array('%d')
+        );
     }
 } 

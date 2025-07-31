@@ -16,6 +16,7 @@ class Tarot_Frontend {
     public function __construct() {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         add_shortcode('ac_three_tarot_card_reading', array($this, 'tarot_reading_shortcode'));
+        add_shortcode('ac_daily_tarot', array($this, 'daily_tarot_shortcode'));
         add_action('wp_ajax_tarot_get_reading', array($this, 'ajax_get_reading'));
         add_action('wp_ajax_nopriv_tarot_get_reading', array($this, 'ajax_get_reading'));
         add_action('wp_ajax_tarot_get_random_cards', array($this, 'ajax_get_random_cards'));
@@ -58,6 +59,23 @@ class Tarot_Frontend {
         
         ob_start();
         include TAROT_PLUGIN_PATH . 'templates/frontend-display.php';
+        return ob_get_clean();
+    }
+    
+    /**
+     * Daily tarot shortcode
+     */
+    public function daily_tarot_shortcode($atts) {
+        $atts = shortcode_atts(array(
+            'title' => 'Daily Tarot Card',
+            'show_previous' => 'false'
+        ), $atts);
+        
+        $database = new Tarot_Database();
+        $daily_card = $database->get_daily_card();
+        
+        ob_start();
+        include TAROT_PLUGIN_PATH . 'templates/daily-tarot-display.php';
         return ob_get_clean();
     }
     
