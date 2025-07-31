@@ -35,7 +35,7 @@ class Tarot_Admin {
             'manage_options',
             'three-card-tarot',
             array($this, 'admin_page'),
-            'dashicons-cards',
+            'dashicons-admin-plugins',
             30
         );
         

@@ -278,7 +278,17 @@ class Tarot_Database {
         );
         
         if ($card) {
-            $orientation = (rand(0, 1) == 1) ? 'reversed' : 'upright';
+            // Check if reversed cards are enabled in settings
+            $settings = get_option('tarot_settings', array());
+            $enable_reversed_cards = isset($settings['enable_reversed_cards']) ? $settings['enable_reversed_cards'] : false;
+            
+            // Determine orientation based on setting
+            if ($enable_reversed_cards) {
+                $orientation = (rand(0, 1) == 1) ? 'reversed' : 'upright';
+            } else {
+                $orientation = 'upright'; // Only upright if setting is disabled
+            }
+            
             $this->set_daily_card($card->id, $orientation, $date);
             
             // Return the daily card record

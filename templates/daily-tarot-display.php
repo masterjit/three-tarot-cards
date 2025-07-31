@@ -16,7 +16,6 @@ $show_previous = $atts['show_previous'] === 'true';
 <div class="daily-tarot-container">
     <div class="daily-tarot-header">
         <h2 class="daily-tarot-title"><?php echo esc_html($title); ?></h2>
-        <p class="daily-tarot-date"><?php echo esc_html(date('l, F j, Y')); ?></p>
     </div>
     
     <?php if ($daily_card): ?>

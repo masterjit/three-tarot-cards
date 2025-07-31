@@ -86,11 +86,22 @@ if (!defined('ABSPATH')) {
                     <?php endforeach; ?>
                 </select>
                 
-                <label for="orientation-select"><?php echo esc_html__('Orientation:', 'three-card-tarot'); ?></label>
-                <select id="orientation-select" name="orientation">
-                    <option value="upright"><?php echo esc_html__('Upright', 'three-card-tarot'); ?></option>
-                    <option value="reversed"><?php echo esc_html__('Reversed', 'three-card-tarot'); ?></option>
-                </select>
+                <?php
+                // Check if reversed cards are enabled in settings
+                $settings = get_option('tarot_settings', array());
+                $enable_reversed_cards = isset($settings['enable_reversed_cards']) ? $settings['enable_reversed_cards'] : false;
+                ?>
+                
+                <?php if ($enable_reversed_cards): ?>
+                    <label for="orientation-select"><?php echo esc_html__('Orientation:', 'three-card-tarot'); ?></label>
+                    <select id="orientation-select" name="orientation">
+                        <option value="upright"><?php echo esc_html__('Upright', 'three-card-tarot'); ?></option>
+                        <option value="reversed"><?php echo esc_html__('Reversed', 'three-card-tarot'); ?></option>
+                    </select>
+                <?php else: ?>
+                    <input type="hidden" id="orientation-select" name="orientation" value="upright">
+                    <p class="description"><?php echo esc_html__('Reversed cards are disabled in settings. Only upright cards are available.', 'three-card-tarot'); ?></p>
+                <?php endif; ?>
                 
                 <button type="button" class="button button-primary" id="set-daily-card">
                     <?php echo esc_html__('Set as Today\'s Card', 'three-card-tarot'); ?>
