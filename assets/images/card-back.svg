@@ -1,1 +1,44 @@
- 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 350" width="200" height="350">
+  <!-- Card background -->
+  <rect width="200" height="350" fill="#2c3e50" rx="10" ry="10"/>
+  
+  <!-- Border -->
+  <rect x="5" y="5" width="190" height="340" fill="none" stroke="#34495e" stroke-width="2" rx="8" ry="8"/>
+  
+  <!-- Inner border -->
+  <rect x="15" y="15" width="170" height="320" fill="none" stroke="#34495e" stroke-width="1" rx="5" ry="5"/>
+  
+  <!-- Central design -->
+  <circle cx="100" cy="175" r="40" fill="none" stroke="#ecf0f1" stroke-width="2"/>
+  <circle cx="100" cy="175" r="30" fill="none" stroke="#ecf0f1" stroke-width="1"/>
+  <circle cx="100" cy="175" r="20" fill="none" stroke="#ecf0f1" stroke-width="1"/>
+  
+  <!-- Corner decorations -->
+  <g fill="#ecf0f1">
+    <!-- Top left -->
+    <circle cx="40" cy="60" r="3"/>
+    <circle cx="50" cy="50" r="2"/>
+    <circle cx="60" cy="40" r="2"/>
+    
+    <!-- Top right -->
+    <circle cx="160" cy="60" r="3"/>
+    <circle cx="150" cy="50" r="2"/>
+    <circle cx="140" cy="40" r="2"/>
+    
+    <!-- Bottom left -->
+    <circle cx="40" cy="290" r="3"/>
+    <circle cx="50" cy="300" r="2"/>
+    <circle cx="60" cy="310" r="2"/>
+    
+    <!-- Bottom right -->
+    <circle cx="160" cy="290" r="3"/>
+    <circle cx="150" cy="300" r="2"/>
+    <circle cx="140" cy="310" r="2"/>
+  </g>
+  
+  <!-- Central symbol -->
+  <g fill="#ecf0f1">
+    <path d="M100 155 L110 175 L100 195 L90 175 Z"/>
+    <circle cx="100" cy="175" r="5"/>
+  </g>
+</svg> 
