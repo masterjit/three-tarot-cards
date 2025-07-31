@@ -100,8 +100,21 @@ jQuery(document).ready(function($) {
                     $('#edit-card-id').val(card.id);
                     $('#edit-card-name').val(card.card_name);
                     $('#edit-card-image').val(card.card_image);
-                    $('#edit-card-content').val(card.card_content);
-                    $('#edit-card-content-reversed').val(card.card_content_reversed || '');
+                    
+                    // Set content in WordPress editors
+                    if (typeof tinymce !== 'undefined') {
+                        if (tinymce.get('edit-card-content')) {
+                            tinymce.get('edit-card-content').setContent(card.card_content || '');
+                        }
+                        if (tinymce.get('edit-card-content-reversed')) {
+                            tinymce.get('edit-card-content-reversed').setContent(card.card_content_reversed || '');
+                        }
+                    } else {
+                        // Fallback for non-TinyMCE
+                        $('#edit-card-content').val(card.card_content);
+                        $('#edit-card-content-reversed').val(card.card_content_reversed || '');
+                    }
+                    
                     $('#edit-card-position').val(card.card_position);
                     $('#edit-is-active').prop('checked', card.is_active == 1);
                     
@@ -114,6 +127,16 @@ jQuery(document).ready(function($) {
                     
                     // Show modal
                     modal.show();
+                    
+                    // Ensure WordPress editors are properly initialized
+                    if (typeof tinymce !== 'undefined') {
+                        // Trigger editor initialization if needed
+                        setTimeout(function() {
+                            if (tinymce.get('edit-card-content')) {
+                                tinymce.get('edit-card-content').focus();
+                            }
+                        }, 100);
+                    }
                 } else {
                     alert(response.data.message || 'Error loading card data');
                 }

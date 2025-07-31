@@ -108,7 +108,26 @@ if (!defined('ABSPATH')) {
                         <label for="edit-card-content"><?php echo esc_html__('Card Content (Upright)', 'three-card-tarot'); ?></label>
                     </th>
                     <td>
-                        <textarea id="edit-card-content" name="card_content" rows="5" class="large-text" required></textarea>
+                        <?php
+                        wp_editor(
+                            '',
+                            'edit-card-content',
+                            array(
+                                'textarea_name' => 'card_content',
+                                'media_buttons' => false,
+                                'textarea_rows' => 8,
+                                'teeny' => true,
+                                'tinymce' => array(
+                                    'toolbar1' => 'bold,italic,underline,strikethrough,|,bullist,numlist,|,undo,redo',
+                                    'toolbar2' => '',
+                                    'toolbar3' => ''
+                                ),
+                                'quicktags' => array(
+                                    'buttons' => 'strong,em,link,ul,ol,li,close'
+                                )
+                            )
+                        );
+                        ?>
                     </td>
                 </tr>
                 
@@ -117,7 +136,26 @@ if (!defined('ABSPATH')) {
                         <label for="edit-card-content-reversed"><?php echo esc_html__('Card Content (Reversed)', 'three-card-tarot'); ?></label>
                     </th>
                     <td>
-                        <textarea id="edit-card-content-reversed" name="card_content_reversed" rows="5" class="large-text"></textarea>
+                        <?php
+                        wp_editor(
+                            '',
+                            'edit-card-content-reversed',
+                            array(
+                                'textarea_name' => 'card_content_reversed',
+                                'media_buttons' => false,
+                                'textarea_rows' => 8,
+                                'teeny' => true,
+                                'tinymce' => array(
+                                    'toolbar1' => 'bold,italic,underline,strikethrough,|,bullist,numlist,|,undo,redo',
+                                    'toolbar2' => '',
+                                    'toolbar3' => ''
+                                ),
+                                'quicktags' => array(
+                                    'buttons' => 'strong,em,link,ul,ol,li,close'
+                                )
+                            )
+                        );
+                        ?>
                         <p class="description"><?php echo esc_html__('Enter the interpretation when the card appears reversed (optional)', 'three-card-tarot'); ?></p>
                     </td>
                 </tr>

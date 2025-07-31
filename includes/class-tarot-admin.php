@@ -85,8 +85,9 @@ class Tarot_Admin {
         }
         
         wp_enqueue_media();
+        wp_enqueue_editor();
         wp_enqueue_style('tarot-admin', TAROT_PLUGIN_URL . 'assets/css/admin.css', array(), TAROT_PLUGIN_VERSION);
-        wp_enqueue_script('tarot-admin', TAROT_PLUGIN_URL . 'assets/js/admin.js', array('jquery', 'media-upload'), TAROT_PLUGIN_VERSION, true);
+        wp_enqueue_script('tarot-admin', TAROT_PLUGIN_URL . 'assets/js/admin.js', array('jquery', 'media-upload', 'editor'), TAROT_PLUGIN_VERSION, true);
         
         $settings = get_option('tarot_settings', array());
         
