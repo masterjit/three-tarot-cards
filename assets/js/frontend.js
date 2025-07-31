@@ -31,16 +31,27 @@ jQuery(document).ready(function($) {
         $('#tarot-cards-area').show();
         
         // Ensure all cards show back cover and reset transform
-        $('.tarot-card .card-inner').css('transform', 'rotateY(180deg) !important');
+        $('.tarot-card .card-inner').css({
+            'transform': 'rotateY(180deg) !important',
+            '-webkit-transform': 'rotateY(180deg) !important',
+            'transition': 'none !important'
+        });
         $('.tarot-card').css('transform', 'none'); // Reset lift effect
+        
+        // Double-check after a brief delay to ensure back cover is showing
+        setTimeout(function() {
+            $('.tarot-card .card-inner').css({
+                'transform': 'rotateY(180deg) !important',
+                '-webkit-transform': 'rotateY(180deg) !important',
+                'transition': 'transform 0.6s'
+            });
+        }, 50);
         
         // Re-enable clicking on all cards
         $('.tarot-card').css('pointer-events', 'auto');
         
         // Update progress
         updateProgress();
-        
-
     }
     
     // Load initial cards on page load
@@ -51,6 +62,14 @@ jQuery(document).ready(function($) {
             setTimeout(function() {
                 adjustCardWidths(tarot_frontend.total_cards_display);
             }, 200);
+            
+            // Force cards to show back cover one more time after everything is loaded
+            setTimeout(function() {
+                $('.tarot-card .card-inner').css({
+                    'transform': 'rotateY(180deg) !important',
+                    '-webkit-transform': 'rotateY(180deg) !important'
+                });
+            }, 300);
         });
     }
     
@@ -241,10 +260,6 @@ jQuery(document).ready(function($) {
         setTimeout(function() {
             fetchNewRandomCards(function() {
                 initGame();
-                // Ensure all new cards show back cover
-                                        setTimeout(function() {
-                            $('.tarot-card .card-inner').css('transform', 'rotateY(180deg) !important');
-                        }, 100);
                 // Re-enable button and restore original text
                 button.prop('disabled', false).text(originalText);
             });
@@ -283,13 +298,13 @@ jQuery(document).ready(function($) {
         
         cards.forEach(function(card, index) {
             // All cards start as upright by default (no orientation class needed)
-            var cardHtml = '<div class="tarot-card" data-card-id="' + card.id + '" data-card-index="' + index + '" data-orientation="upright">' +
-                '<div class="card-inner">' +
+            var cardHtml = '<div class="tarot-card" data-card-id="' + card.id + '" data-card-index="' + index + '" data-orientation="upright" style="opacity: 0;">' +
+                '<div class="card-inner" style="transform: rotateY(180deg) !important; transition: none !important;">' +
                 '<div class="card-front">' +
                 '<img src="' + card.image + '" alt="' + card.name + '">' +
                 '</div>' +
                 '<div class="card-back">' +
-                '<img src="' + tarot_frontend.card_back_image + '" alt="Card Back">' +
+                '<img src="' + tarot_frontend.card_back_image + '" alt="Card Back" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display=\'none\'; this.parentElement.style.background=\'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)\';">' +
                 '</div>' +
                 '</div>' +
                 '</div>';
@@ -300,10 +315,27 @@ jQuery(document).ready(function($) {
         // Adjust card widths based on number of cards
         adjustCardWidths(cards.length);
         
-        // Ensure all cards start showing back cover
+        // Force cards to show back cover immediately and after rendering
+        $('.tarot-card .card-inner').css({
+            'transform': 'rotateY(180deg) !important',
+            '-webkit-transform': 'rotateY(180deg) !important',
+            'transition': 'none !important'
+        });
+        
+        // Double-check after a brief delay to ensure back cover is showing
         setTimeout(function() {
-            $('.tarot-card .card-inner').css('transform', 'rotateY(180deg) !important');
-        }, 100);
+            $('.tarot-card .card-inner').css({
+                'transform': 'rotateY(180deg) !important',
+                '-webkit-transform': 'rotateY(180deg) !important',
+                'transition': 'transform 0.6s'
+            });
+            
+            // Fade in the cards after they're properly positioned
+            $('.tarot-card').css({
+                'opacity': '1',
+                'transition': 'opacity 0.3s ease-in-out'
+            });
+        }, 50);
         
         // Re-bind click events to new cards
         bindCardEvents();

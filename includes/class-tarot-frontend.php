@@ -195,6 +195,9 @@ class Tarot_Frontend {
             $card_back = TAROT_PLUGIN_URL . 'assets/images/card-back.svg';
         }
         
+        // Ensure the URL is properly formatted
+        $card_back = esc_url($card_back);
+        
         return $card_back;
     }
 } 
