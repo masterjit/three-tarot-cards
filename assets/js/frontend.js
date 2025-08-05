@@ -401,63 +401,44 @@ jQuery(document).ready(function($) {
             var cardId = card.data('card-id');
             var orientation = card.data('orientation');
             
-            // Check if card is already selected
+            // Check if card is already selected - if so, do nothing (prevent deselection)
             if (card.hasClass('selected')) {
-                // Deselect card - flip back to show back cover and remove lift
-                card.removeClass('selected hover'); // Also remove hover class
-                card.find('.card-inner').css('transform', 'rotateY(180deg) !important');
-                card.css('transform', 'none'); // Remove lift effect
-                
-                // Remove card from game state
-                gameState.selectedCards = gameState.selectedCards.filter(function(cardData) {
-                    return cardData.id !== cardId;
-                });
-                
-                // Remove card from summary
-                $('.selected-card[data-card-id="' + cardId + '"]').remove();
-                
-                // Hide selected cards section if no cards are selected
-                if (gameState.selectedCards.length === 0) {
-                    $('#selected-cards').hide();
-                }
-                
-                // Re-enable clicking on all cards since we now have less than 3 selected
-                $('.tarot-card').css('pointer-events', 'auto');
-            } else {
-                // Check if we can select more cards
-                if (gameState.selectedCards.length >= gameState.maxCards) {
-                    alert(tarot_frontend.strings.select_card || 'You can only select 3 cards');
-                    return;
-                }
-                
-                // Select card and immediately flip to show upright/reversed
-                card.addClass('selected').removeClass('hover'); // Remove hover when selected
-                
-                // Apply lift effect
-                card.css('transform', 'translateY(-15px)');
-                
-                // Determine if this card should be reversed (only if reversed feature is enabled)
-                var shouldBeReversed = gameState.enableReversedCards && Math.random() < 0.5;
-                var newOrientation = shouldBeReversed ? 'reversed' : 'upright';
-                
-                // Store orientation in game state (no visual change to initial cards)
-                card.attr('data-orientation', newOrientation);
-                
-                // Flip card to show front (without orientation indicators)
-                card.find('.card-inner').css({
-                    'transform': 'rotateY(0deg) !important',
-                    'transition': 'transform 0.6s ease-in-out'
-                });
-                
-                // Store orientation in game state
-                gameState.selectedCards.push({
-                    id: cardId,
-                    orientation: newOrientation
-                });
-                
-                // Add card to selected cards summary immediately
-                addCardToSummary(cardId, newOrientation, gameState.selectedCards.length);
+                return; // Exit early - no deselection allowed
             }
+            
+            // Check if we can select more cards
+            if (gameState.selectedCards.length >= gameState.maxCards) {
+                alert(tarot_frontend.strings.select_card || 'You can only select 3 cards');
+                return;
+            }
+            
+            // Select card and immediately flip to show upright/reversed
+            card.addClass('selected').removeClass('hover'); // Remove hover when selected
+            
+            // Apply lift effect
+            card.css('transform', 'translateY(-15px)');
+            
+            // Determine if this card should be reversed (only if reversed feature is enabled)
+            var shouldBeReversed = gameState.enableReversedCards && Math.random() < 0.5;
+            var newOrientation = shouldBeReversed ? 'reversed' : 'upright';
+            
+            // Store orientation in game state (no visual change to initial cards)
+            card.attr('data-orientation', newOrientation);
+            
+            // Flip card to show front (without orientation indicators)
+            card.find('.card-inner').css({
+                'transform': 'rotateY(0deg) !important',
+                'transition': 'transform 0.6s ease-in-out'
+            });
+            
+            // Store orientation in game state
+            gameState.selectedCards.push({
+                id: cardId,
+                orientation: newOrientation
+            });
+            
+            // Add card to selected cards summary immediately
+            addCardToSummary(cardId, newOrientation, gameState.selectedCards.length);
             
             // Update progress
             updateProgress();
