@@ -45,7 +45,7 @@ $description = !empty($atts['description']) ? $atts['description'] : ($settings[
         <div class="selected-cards" id="selected-cards" style="display: none;">
             <h3><?php echo esc_html__('Your Selected Cards', 'three-card-tarot'); ?></h3>
             <div class="selected-cards-grid" id="selected-cards-grid"></div>
-            <button class="button button-primary" id="get-reading-btn">
+            <button class="button button-primary" id="get-reading-btn" style="display: none;">
                 <?php echo esc_html__('Get My Reading', 'three-card-tarot'); ?>
             </button>
         </div>
