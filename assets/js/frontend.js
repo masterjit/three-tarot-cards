@@ -23,6 +23,7 @@ jQuery(document).ready(function($) {
         $('#selected-cards').hide();
         $('#reading-results').hide();
         $('#loading-indicator').hide();
+        $('#get-reading-btn').hide(); // Hide the button by default
         
         // Clear selected cards grid
         $('#selected-cards-grid').empty();
@@ -76,6 +77,9 @@ jQuery(document).ready(function($) {
     // Initialize card events
     bindCardEvents();
     
+    // Initialize hover effects
+    setupCardHoverEffects();
+    
     // Handle window resize to adjust card widths
     $(window).on('resize', function() {
         if ($('.tarot-card').length > 0) {
@@ -95,6 +99,13 @@ jQuery(document).ready(function($) {
             $('#selection-progress').show();
         } else {
             $('#selection-progress').hide();
+        }
+        
+        // Show/hide "Get Reading" button based on card count
+        if (count === gameState.maxCards) {
+            $('#get-reading-btn').show();
+        } else {
+            $('#get-reading-btn').hide();
         }
     }
     
@@ -149,11 +160,6 @@ jQuery(document).ready(function($) {
         // Prevent default behavior to avoid page scrolling
         e.preventDefault();
         e.stopPropagation();
-        
-        if (gameState.selectedCards.length !== gameState.maxCards) {
-            alert('Please select exactly 3 cards');
-            return;
-        }
         
         // Show loading
         $('#loading-indicator').show();
@@ -339,6 +345,9 @@ jQuery(document).ready(function($) {
         
         // Re-bind click events to new cards
         bindCardEvents();
+        
+        // Re-setup hover effects for new cards
+        setupCardHoverEffects();
     }
     
     // Function to adjust card widths based on number of cards
@@ -392,63 +401,44 @@ jQuery(document).ready(function($) {
             var cardId = card.data('card-id');
             var orientation = card.data('orientation');
             
-            // Check if card is already selected
+            // Check if card is already selected - if so, do nothing (prevent deselection)
             if (card.hasClass('selected')) {
-                // Deselect card - flip back to show back cover and remove lift
-                card.removeClass('selected');
-                card.find('.card-inner').css('transform', 'rotateY(180deg) !important');
-                card.css('transform', 'none'); // Remove lift effect
-                
-                // Remove card from game state
-                gameState.selectedCards = gameState.selectedCards.filter(function(cardData) {
-                    return cardData.id !== cardId;
-                });
-                
-                // Remove card from summary
-                $('.selected-card[data-card-id="' + cardId + '"]').remove();
-                
-                // Hide selected cards section if no cards are selected
-                if (gameState.selectedCards.length === 0) {
-                    $('#selected-cards').hide();
-                }
-                
-                // Re-enable clicking on all cards since we now have less than 3 selected
-                $('.tarot-card').css('pointer-events', 'auto');
-            } else {
-                // Check if we can select more cards
-                if (gameState.selectedCards.length >= gameState.maxCards) {
-                    alert(tarot_frontend.strings.select_card || 'You can only select 3 cards');
-                    return;
-                }
-                
-                // Select card and immediately flip to show upright/reversed
-                card.addClass('selected');
-                
-                // Apply lift effect
-                card.css('transform', 'translateY(-15px)');
-                
-                // Determine if this card should be reversed (only if reversed feature is enabled)
-                var shouldBeReversed = gameState.enableReversedCards && Math.random() < 0.5;
-                var newOrientation = shouldBeReversed ? 'reversed' : 'upright';
-                
-                // Store orientation in game state (no visual change to initial cards)
-                card.attr('data-orientation', newOrientation);
-                
-                // Flip card to show front (without orientation indicators)
-                card.find('.card-inner').css({
-                    'transform': 'rotateY(0deg) !important',
-                    'transition': 'transform 0.6s ease-in-out'
-                });
-                
-                // Store orientation in game state
-                gameState.selectedCards.push({
-                    id: cardId,
-                    orientation: newOrientation
-                });
-                
-                // Add card to selected cards summary immediately
-                addCardToSummary(cardId, newOrientation, gameState.selectedCards.length);
+                return; // Exit early - no deselection allowed
             }
+            
+            // Check if we can select more cards
+            if (gameState.selectedCards.length >= gameState.maxCards) {
+                alert(tarot_frontend.strings.select_card || 'You can only select 3 cards');
+                return;
+            }
+            
+            // Select card and immediately flip to show upright/reversed
+            card.addClass('selected').removeClass('hover'); // Remove hover when selected
+            
+            // Apply lift effect
+            card.css('transform', 'translateY(-15px)');
+            
+            // Determine if this card should be reversed (only if reversed feature is enabled)
+            var shouldBeReversed = gameState.enableReversedCards && Math.random() < 0.5;
+            var newOrientation = shouldBeReversed ? 'reversed' : 'upright';
+            
+            // Store orientation in game state (no visual change to initial cards)
+            card.attr('data-orientation', newOrientation);
+            
+            // Flip card to show front (without orientation indicators)
+            card.find('.card-inner').css({
+                'transform': 'rotateY(0deg) !important',
+                'transition': 'transform 0.6s ease-in-out'
+            });
+            
+            // Store orientation in game state
+            gameState.selectedCards.push({
+                id: cardId,
+                orientation: newOrientation
+            });
+            
+            // Add card to selected cards summary immediately
+            addCardToSummary(cardId, newOrientation, gameState.selectedCards.length);
             
             // Update progress
             updateProgress();
@@ -597,22 +587,41 @@ jQuery(document).ready(function($) {
         }
     });
     
-    // Add card flip animation
-    $('.tarot-card').on('mouseenter', function() {
-        if (!$(this).hasClass('selected')) {
-            $(this).addClass('hover');
+    // Enhanced hover and touch effects for both desktop and mobile
+    function setupCardHoverEffects() {
+        var isMobile = 'ontouchstart' in window || window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Mobile: Use touch events for hover effect
+            $('.tarot-card').off('touchstart touchend').on('touchstart', function(e) {
+                e.preventDefault();
+                var card = $(this);
+                if (!card.hasClass('selected')) {
+                    card.addClass('hover');
+                }
+            }).on('touchend', function(e) {
+                e.preventDefault();
+                var card = $(this);
+                card.removeClass('hover');
+                // Trigger click after a brief delay to allow hover effect to be seen
+                setTimeout(function() {
+                    card.trigger('click');
+                }, 150);
+            });
+        } else {
+            // Desktop: Use mouse events for hover effect
+            $('.tarot-card').off('mouseenter mouseleave').on('mouseenter', function() {
+                if (!$(this).hasClass('selected')) {
+                    $(this).addClass('hover');
+                }
+            }).on('mouseleave', function() {
+                $(this).removeClass('hover');
+            });
         }
-    }).on('mouseleave', function() {
-        $(this).removeClass('hover');
-    });
-    
-    // Handle touch events for mobile
-    if ('ontouchstart' in window) {
-        $('.tarot-card').on('touchstart', function(e) {
-            e.preventDefault();
-            $(this).trigger('click');
-        });
     }
+    
+    // Initialize hover effects
+    setupCardHoverEffects();
     
     // Add sound effects (if enabled)
     function playSound(soundType) {
@@ -634,6 +643,9 @@ jQuery(document).ready(function($) {
             $('.selected-cards-grid').removeClass('mobile');
             $('.reading-cards').removeClass('mobile');
         }
+        
+        // Re-setup hover effects when screen size changes
+        setupCardHoverEffects();
     }
     
     // Call on load and resize
@@ -680,14 +692,8 @@ jQuery(document).ready(function($) {
         shuffleCards();
     });
     
-    // Handle card hover effects
-    $('.tarot-card').on('mouseenter', function() {
-        if (!$(this).hasClass('selected')) {
-            $(this).addClass('card-hover');
-        }
-    }).on('mouseleave', function() {
-        $(this).removeClass('card-hover');
-    });
+    // Re-setup hover effects after cards are updated
+    setupCardHoverEffects();
     
     // Add loading animation for card images
     $('.tarot-card img').on('load', function() {

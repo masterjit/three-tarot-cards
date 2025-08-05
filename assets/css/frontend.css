@@ -37,10 +37,19 @@
     align-items: center;
     flex-wrap: nowrap;
     gap: 0;
-    margin-bottom: 30px;
+    margin-bottom: 80px; /* Significantly increased margin to prevent overlap */
     position: relative;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
+    padding-bottom: 40px; /* Increased padding to ensure separation */
+}
+
+/* Tarot Cards Area - Specific container to prevent overlap */
+.tarot-cards-area {
+    margin-bottom: 100px; /* Large bottom margin to ensure no overlap */
+    padding-bottom: 60px; /* Additional padding for separation */
+    position: relative;
+    z-index: 1; /* Lower z-index than progress section */
 }
 
 .cards-grid::-webkit-scrollbar {
@@ -56,17 +65,16 @@
     cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s ease-in-out;
     position: relative;
-    width: 192px; /* Default width, will be adjusted by JavaScript */
-    height: 332px; /* Default height, will be adjusted by JavaScript */
-    margin: 0 -30px; /* Negative margin for overlap */
+    width: 192px; /* Desktop: 192px × 332px */
+    height: 332px; /* Desktop: 192px × 332px */
+    margin: 0 -25px; /* Increased negative margin for more overlap */
     z-index: 1;
 }
 
 /* Dynamic z-index will be set by JavaScript */
 
 .tarot-card:hover {
-    transform: translateY(-5px) scale(1.05);
-    z-index: 999 !important;
+    transform: translateY(-5px) !important;
 }
 
 /* Disabled state for cards when 3 are selected */
@@ -76,13 +84,32 @@
 }
 
 .tarot-card[style*="pointer-events: none"]:hover {
-    transform: none;
+    transform: translateY(-5px) !important;
 }
 
 /* Keep selected cards lifted even when disabled */
 .tarot-card[style*="pointer-events: none"].selected {
     opacity: 1;
     transform: translateY(-15px);
+}
+
+/* Disable hover effect for selected cards */
+.tarot-card.selected:hover {
+    transform: translateY(-15px) !important; /* Keep the selected position */
+}
+
+/* Hover effect for unselected cards */
+.tarot-card.hover {
+    transform: translateY(-5px) !important;
+    transition: transform 0.3s ease !important;
+}
+
+/* Ensure hover effect works on mobile touch */
+@media (max-width: 768px) {
+    .tarot-card.hover {
+        transform: translateY(-5px) !important;
+        transition: transform 0.2s ease !important;
+    }
 }
 
 /* Additional class for reversed images in summaries and readings */
@@ -188,7 +215,16 @@
 /* When card is selected, flip to show front and lift up */
 .tarot-card.selected {
     transform: translateY(-15px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 0 25px #E49658;
+    border: 2px solid #E49658;
+    border-radius: 15px;
+}
+
+/* Ensure selected card back also has the glow effect */
+.tarot-card.selected .card-back {
+    box-shadow: 0 0 25px #E49658;
+    border: 2px solid #E49658;
+    border-radius: 15px;
 }
 
 .tarot-card.selected .card-inner {
@@ -207,10 +243,12 @@
     border-radius: 15px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+    width: 192px; /* Desktop: 192px × 332px */
+    height: 332px; /* Desktop: 192px × 332px */
 }
 
 .card-front {    
-    transform: rotateY(180deg);
+    transform: rotateY(0deg);
 }
 
 .card-back {
@@ -219,14 +257,18 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 192px; /* Desktop: 192px × 332px */
+    height: 332px; /* Desktop: 192px × 332px */
+    transform: rotateY(0deg);
 }
 
 .card-front img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
 }
 
 .card-back img {
@@ -236,6 +278,21 @@
     display: block; /* Ensure proper display in all browsers */
     max-width: 100%; /* Prevent overflow */
     max-height: 100%; /* Prevent overflow */
+}
+
+/* Responsive images for all card types */
+.tarot-card img,
+.selected-card img,
+.reading-card img,
+.history-card img,
+.daily-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    border-radius: inherit;
 }
 
 .card-name {
@@ -253,11 +310,13 @@
 /* Selection Progress */
 .selection-progress {
     text-align: center;
-    margin: 30px 0;
+    margin: 80px 0 30px 0; /* Increased top margin to prevent overlap */
     padding: 20px;
     background: #f8f9fa;
     border-radius: 10px;
     border: 2px solid #e9ecef;
+    position: relative; /* Ensure proper positioning */
+    z-index: 10; /* Higher z-index to ensure it's above cards */
 }
 
 .progress-text {
@@ -324,8 +383,11 @@
 }
 
 .selected-card img {    
-    height: 200px;
-    object-fit: cover;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
     border-radius: 8px;
     margin-bottom: 10px;
 }
@@ -378,8 +440,11 @@
 }
 
 .reading-card img {
-    height: 200px;
-    object-fit: cover;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
     border-radius: 10px;
     margin-bottom: 15px;
 }
@@ -595,70 +660,348 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .tarot-reading-container {
-        padding: 10px;
+        padding: 20px 15px;
+        max-width: 100%;
     }
     
     .tarot-title {
-        font-size: 2em;
+        font-size: 1.8em;
+        margin-bottom: 8px;
+    }
+    
+    .tarot-description {
+        font-size: 1em;
     }
     
     .cards-grid {
-        justify-content: flex-start;
+        justify-content: center;
         padding: 20px 10px;
+        margin-bottom: 60px;
+        margin-left: 10px;
+        margin-right: 10px;
     }
     
     .tarot-card {
-        margin: 0 -20px;
+        width: 120px; /* Reduced for better mobile fit */
+        height: 208px; /* Reduced for better mobile fit */
+        margin: 0 -8px; /* Increased negative margin for more overlap */
         flex-shrink: 0;
-        /* Width and height will be set by JavaScript */
     }
     
     .card-inner {
-        /* Height will be set by JavaScript */
+        width: 100%;
+        height: 100%;
     }
     
-    .reading-cards {
-        grid-template-columns: 1fr;
+    .card-front,
+    .card-back {
+        width: 120px; /* Reduced for better mobile fit */
+        height: 208px; /* Reduced for better mobile fit */
+    }
+    
+    /* Ensure images are responsive on mobile */
+    .tarot-card img,
+    .selected-card img,
+    .reading-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
+    }
+    
+    /* Selection Progress adjustments */
+    .selection-progress {
+        margin: 60px 0 20px 0;
+        padding: 15px;
+    }
+    
+    .progress-text {
+        font-size: 1em;
+    }
+    
+    /* Selected Cards adjustments */
+    .selected-cards {
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .selected-cards h3 {
+        font-size: 1.5em;
     }
     
     .selected-cards-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .selected-card img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+    }
+    
+    /* Reading Results adjustments */
+    .reading-results {
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .reading-header h3 {
+        font-size: 1.6em;
+    }
+    
+    .reading-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .reading-card {
+        padding: 15px;
+    }
+    
+    .reading-card img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+    }
+    
+    .reading-interpretation {
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .reading-interpretation h3 {
+        font-size: 1.3em;
+    }
+    
+    .reading-interpretation h4 {
+        font-size: 1.1em;
+    }
+    
+    /* Buttons adjustments */
+    .reading-actions .button {
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 1em;
     }
     
     .share-options {
         grid-template-columns: 1fr;
+        gap: 10px;
     }
     
     .share-link {
         flex-direction: column;
         align-items: stretch;
     }
+    
+    /* Instructions adjustments */
+    .tarot-instructions {
+        padding: 20px;
+        margin-top: 30px;
+    }
+    
+    .tarot-instructions h4 {
+        font-size: 1.2em;
+    }
+    
+    .tarot-instructions ol {
+        font-size: 0.95em;
+    }
 }
 
 @media (max-width: 480px) {
-    .cards-grid {
-        justify-content: flex-start;
-        padding: 20px 5px;
-    }
-    
-    .tarot-card {
-        margin: 0 -15px;
-        flex-shrink: 0;
-        /* Width and height will be set by JavaScript */
-    }
-    
-    .card-inner {
-        /* Height will be set by JavaScript */
+    .tarot-reading-container {
+        padding: 15px 10px;
     }
     
     .tarot-title {
-        font-size: 1.5em;
+        font-size: 1.4em;
+        margin-bottom: 6px;
     }
     
+    .tarot-description {
+        font-size: 0.9em;
+    }
+    
+    .cards-grid {
+        justify-content: center;
+        padding: 15px 5px;
+        margin-bottom: 50px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+    .tarot-card {
+        width: 100px; /* Further reduced for small mobile */
+        height: 173px; /* Further reduced for small mobile */
+        margin: 0 -5px; /* Increased negative margin for more overlap */
+        flex-shrink: 0;
+    }
+    
+    .card-inner {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .card-front,
+    .card-back {
+        width: 100px; /* Further reduced for small mobile */
+        height: 173px; /* Further reduced for small mobile */
+    }
+    
+    /* Ensure images are responsive on small mobile */
+    .tarot-card img,
+    .selected-card img,
+    .reading-card img,
+    .history-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
+    }
+    
+    /* Selection Progress adjustments */
+    .selection-progress {
+        margin: 50px 0 15px 0;
+        padding: 12px;
+    }
+    
+    .progress-text {
+        font-size: 0.9em;
+    }
+    
+    .progress-bar {
+        height: 15px;
+    }
+    
+    /* Selected Cards adjustments */
+    .selected-cards {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .selected-cards h3 {
+        font-size: 1.3em;
+    }
+    
+    .selected-cards p {
+        font-size: 1rem;
+    }
+    
+    .selected-cards-grid {
+        gap: 12px;
+    }
+    
+    .selected-card {
+        padding: 12px;
+    }
+    
+    .selected-card img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 150px;
+        object-fit: contain;
+    }
+    
+    .selected-card h4 {
+        font-size: 1em;
+    }
+    
+    /* Reading Results adjustments */
+    .reading-results {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .reading-header h3 {
+        font-size: 1.4em;
+    }
+    
+    .reading-cards {
+        gap: 12px;
+    }
+    
+    .reading-card {
+        padding: 12px;
+    }
+    
+    .reading-card img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 150px;
+        object-fit: contain;
+    }
+    
+    .reading-card h4 {
+        font-size: 1.1em;
+    }
+    
+    .reading-interpretation {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .reading-interpretation h3 {
+        font-size: 1.2em;
+    }
+    
+    .reading-interpretation h4 {
+        font-size: 1em;
+    }
+    
+    .reading-interpretation p {
+        font-size: 0.95em;
+    }
+    
+    /* Buttons adjustments */
     .reading-actions .button {
         display: block;
-        margin: 10px 0;
+        margin: 8px 0;
         width: 100%;
+        padding: 12px 20px;
+        font-size: 0.95em;
+    }
+    
+    /* Instructions adjustments */
+    .tarot-instructions {
+        padding: 15px;
+        margin-top: 25px;
+    }
+    
+    .tarot-instructions h4 {
+        font-size: 1.1em;
+    }
+    
+    .tarot-instructions ol {
+        font-size: 0.9em;
+    }
+    
+    .tarot-instructions li {
+        margin-bottom: 6px;
+    }
+    
+    /* Modal adjustments */
+    .modal-content {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .share-options {
+        gap: 8px;
+    }
+    
+    .share-options .button {
+        padding: 10px 15px;
+        font-size: 12px;
     }
 }
 
