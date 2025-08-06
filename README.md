@@ -11,6 +11,7 @@ A complete WordPress plugin for interactive tarot card readings with a beautiful
 - **Customizable Settings**: Configure reading parameters and card back images
 - **AJAX-powered**: Fast, dynamic interactions without page reloads
 - **Shortcode Support**: Use `[ac_three_tarot_card_reading]` anywhere
+- **Daily Tarot**: Automatic daily card selection that stays the same for the entire day
 
 ## 📋 Requirements
 
@@ -33,15 +34,28 @@ A complete WordPress plugin for interactive tarot card readings with a beautiful
 
 ## 📖 Usage
 
-### Shortcode
+### Shortcodes
+
+#### Three Card Reading
 Add this shortcode to any page or post:
 ```
 [ac_three_tarot_card_reading]
 ```
 
-### Custom Parameters
+#### Custom Parameters
 ```
 [ac_three_tarot_card_reading title="My Custom Reading" description="Select your cards wisely"]
+```
+
+#### Daily Tarot Card
+Display a daily tarot card that automatically updates each day:
+```
+[ac_daily_tarot]
+```
+
+#### Daily Tarot with Previous Cards
+```
+[ac_daily_tarot title="Today's Card" show_previous="true"]
 ```
 
 ### Admin Interface

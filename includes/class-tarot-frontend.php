@@ -21,6 +21,8 @@ class Tarot_Frontend {
         add_action('wp_ajax_nopriv_tarot_get_reading', array($this, 'ajax_get_reading'));
         add_action('wp_ajax_tarot_get_random_cards', array($this, 'ajax_get_random_cards'));
         add_action('wp_ajax_nopriv_tarot_get_random_cards', array($this, 'ajax_get_random_cards'));
+        add_action('wp_ajax_tarot_get_daily_card', array($this, 'ajax_get_daily_card'));
+        add_action('wp_ajax_nopriv_tarot_get_daily_card', array($this, 'ajax_get_daily_card'));
     }
     
     /**
@@ -29,6 +31,7 @@ class Tarot_Frontend {
     public function enqueue_scripts() {
         wp_enqueue_style('tarot-frontend', TAROT_PLUGIN_URL . 'assets/css/frontend.css', array(), TAROT_PLUGIN_VERSION);
         wp_enqueue_script('tarot-frontend', TAROT_PLUGIN_URL . 'assets/js/frontend.js', array('jquery'), TAROT_PLUGIN_VERSION, true);
+        wp_enqueue_script('tarot-daily', TAROT_PLUGIN_URL . 'assets/js/daily-tarot.js', array('jquery'), TAROT_PLUGIN_VERSION, true);
         
         $settings = get_option('tarot_settings', array());
         
@@ -71,8 +74,8 @@ class Tarot_Frontend {
             'show_previous' => 'false'
         ), $atts);
         
-        $database = new Tarot_Database();
-        $daily_card = $database->get_daily_card();
+        // Don't load the daily card here - it will be loaded via AJAX
+        // This ensures a fresh card is selected for the day when the page loads
         
         ob_start();
         include TAROT_PLUGIN_PATH . 'templates/daily-tarot-display.php';
@@ -182,6 +185,36 @@ class Tarot_Frontend {
         }
         
         return $interpretation;
+    }
+    
+    /**
+     * AJAX get daily card
+     */
+    public function ajax_get_daily_card() {
+        check_ajax_referer('tarot_frontend_nonce', 'nonce');
+        
+        $database = new Tarot_Database();
+        $daily_card = $database->get_daily_card();
+        
+        if (!$daily_card) {
+            wp_send_json_error(array(
+                'message' => __('No daily card available.', 'three-card-tarot')
+            ));
+        }
+        
+        // Format daily card for frontend
+        $formatted_card = array(
+            'id' => $daily_card->id,
+            'name' => $daily_card->card_name,
+            'image' => $daily_card->card_image,
+            'orientation' => $daily_card->daily_orientation,
+            'content' => stripslashes(wp_kses_post($daily_card->daily_orientation === 'reversed' ? $daily_card->card_content_reversed : $daily_card->card_content)),
+            'date' => current_time('Y-m-d')
+        );
+        
+        wp_send_json_success(array(
+            'card' => $formatted_card
+        ));
     }
     
     /**
